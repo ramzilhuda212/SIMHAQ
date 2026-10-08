@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIMHAQ - SIT & Ponpes Al Firdaus</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Export Libraries: SheetJS & jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  
+  <style>
+    :root {
+      --af-navy: #0F2042;
+      --af-navy-dark: #0B1B3D;
+      --af-navy-light: #1A365D;
+      --af-gold: #D4AF37;
+      --af-gold-hover: #C59B27;
+      --af-gold-light: #FDF8E7;
+      --af-orange: #E65100;
+      --af-green: #1E824C;
+      --af-bg: #F4F6F8;
+    }
+
+    body { 
+      background-color: var(--af-bg); 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    }
+
+    /* SIDEBAR STYLING DENGAN TEMA AL FIRDAUS */
+    .sidebar { 
+      min-height: 100vh; 
+      background: linear-gradient(180deg, var(--af-navy-dark) 0%, var(--af-navy) 100%); 
+      color: #fff; 
+      border-right: 3px solid var(--af-gold);
+    }
+    .sidebar .nav-link { 
+      color: rgba(255,255,255,0.85); 
+      margin: 4px 0; 
+      border-radius: 8px; 
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+    .sidebar .nav-link:hover { 
+      background: var(--af-navy-light); 
+      color: var(--af-gold); 
+    }
+    .sidebar .nav-link.active { 
+      background: var(--af-navy-light); 
+      color: var(--af-gold); 
+      font-weight: 700;
+      border-left: 4px solid var(--af-gold);
+    }
+
+    /* CARD STATS & ACCENTS */
+    .card-stat { 
+      border-left: 5px solid var(--af-gold); 
+      border-radius: 10px;
+      transition: transform 0.2s ease;
+    }
+    .card-stat:hover {
+      transform: translateY(-2px);
+    }
+    
+    /* LOGIN CONTAINER & LOGO */
+    .login-container { 
+      max-width: 440px; 
+      margin-top: 60px; 
+    }
+    .logo-frame-login {
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 15px auto;
+      border-radius: 50%;
+      background: #ffffff;
+      padding: 6px;
+      border: 3px solid var(--af-gold);
+      box-shadow: 0 6px 15px rgba(15, 32, 66, 0.25);
+    }
+    .logo-frame-login img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .logo-sidebar {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: #fff;
+      padding: 2px;
+      border: 2px solid var(--af-gold);
+    }
+
+    /* CUSTOM BUTTONS */
+    .btn-firdaus {
+      background-color: var(--af-navy);
+      color: #ffffff;
+      border: 1px solid var(--af-navy);
+      font-weight: 600;
+    }
+    .btn-firdaus:hover {
+      background-color: var(--af-navy-dark);
+      color: var(--af-gold);
+    }
+    .btn-gold {
+      background-color: var(--af-gold);
+      color: var(--af-navy-dark);
+      font-weight: 700;
+      border: 1px solid var(--af-gold);
+    }
+    .btn-gold:hover {
+      background-color: var(--af-gold-hover);
+      color: var(--af-navy-dark);
+    }
+
+    /* TABLES & SUB-NAV */
+    .table-firdaus-head {
+      background-color: var(--af-navy) !important;
+      color: #ffffff !important;
+    }
+    .sub-nav .nav-link { 
+      color: var(--af-navy); 
+      font-weight: 600; 
+      border-radius: 20px; 
+      padding: 6px 18px; 
+      margin-right: 8px; 
+      border: 1px solid #ced4da;
+    }
+    .sub-nav .nav-link.active { 
+      background-color: var(--af-navy); 
+      color: var(--af-gold); 
+      border-color: var(--af-navy);
+    }
+    .text-firdaus { color: var(--af-navy); }
+    .text-gold { color: var(--af-gold); }
+    .bg-firdaus { background-color: var(--af-navy); color: #fff; }
+    .badge-gold { background-color: var(--af-gold); color: var(--af-navy-dark); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- VIEW LOGIN -->
+<div id="loginView" class="container login-container">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body p-4 text-center">
+      <div class="logo-frame-login">
+        <img id="imgLogoLogin" src="logo.png" alt="Logo Al Firdaus" onerror="this.src=AL_FIRDAUS_FALLBACK_LOGO">
+      </div>
+      <h4 class="fw-bold text-firdaus mb-0">SIMHAQ AL FIRDAUS</h4>
+      <p class="text-muted small">SIT & Ponpes Al Firdaus Bandarlampung</p>
+      <hr style="border-top: 2px solid var(--af-gold); opacity: 0.8;">
+      
+      <form id="formLogin" class="text-start mt-3">
+        <div class="mb-3">
+          <label class="form-label fw-bold text-firdaus">Username</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-firdaus"><i class="fa-solid fa-user"></i></span>
+            <input type="text" id="loginUsername" class="form-control" required placeholder="Contoh: admin">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold text-firdaus">Password</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-firdaus"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="loginPassword" class="form-control" required placeholder="Default: admin123">
+          </div>
+        </div>
+        <button type="submit" id="btnLogin" class="btn btn-firdaus w-100 py-2 mt-2">
+          <i class="fa-solid fa-right-to-bracket me-2"></i> MASUK SISTEM
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW MAIN APP -->
+<div id="appView" class="container-fluid d-none">
+  <div class="row">
+    <!-- SIDEBAR -->
+    <nav class="col-md-3 col-lg-2 sidebar p-3 d-flex flex-column">
+      <div class="d-flex align-items-center mb-3 pb-3 border-bottom border-warning">
+        <img id="imgLogoSidebar" src="logo.png" class="logo-sidebar me-2" alt="Logo Al Firdaus" onerror="this.src=AL_FIRDAUS_FALLBACK_LOGO">
+        <div>
+          <span class="fs-5 fw-bold text-gold d-block" style="line-height: 1.1;">SIMHAQ</span>
+          <small style="font-size: 0.7rem; color: #e0e0e0;">SIT & Ponpes Al Firdaus</small>
+        </div>
+      </div>
+      
+      <div class="small text-light bg-dark bg-opacity-50 p-2 rounded mb-3 border border-secondary" id="userInfo">
+        <i class="fa-solid fa-user-circle text-gold me-1"></i> Ustadz Admin
+      </div>
+
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="nav-link active" onclick="switchTab('dashboard', event)">
+            <i class="fa-solid fa-chart-line me-2 text-gold"></i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" onclick="switchTab('presensi', event)">
+            <i class="fa-solid fa-clipboard-user me-2 text-gold"></i> Presensi Halaqah
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" onclick="switchTab('setoran', event)">
+            <i class="fa-solid fa-pen-to-square me-2 text-gold"></i> Input Setoran
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" onclick="switchTab('laporan', event)">
+            <i class="fa-solid fa-file-invoice me-2 text-gold"></i> Laporan Capaian
+          </a>
+        </li>
+      </ul>
+      <hr class="border-warning">
+      <button class="btn btn-outline-light btn-sm w-100" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket me-2 text-gold"></i> Keluar Sistem
+      </button>
+    </nav>
+
+    <!-- CONTENT AREA -->
+    <main class="col-md-9 col-lg-10 ms-sm-auto px-4 py-3">
+      
+      <!-- TAB 1: DASHBOARD -->
+      <div id="tab-dashboard" class="tab-content">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+          <div>
+            <h3 class="fw-bold text-firdaus mb-0">Dashboard Utama</h3>
+            <small class="text-muted">Sistem Informasi Manajemen Halaqah Al-Qur'an Al Firdaus</small>
+          </div>
+          <span class="badge bg-firdaus p-2 border border-warning" id="currentDateDisplay"></span>
+        </div>
+        
+        <!-- Stat Cards -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+              <div class="text-muted small font-weight-bold">Total Santri</div>
+              <div class="fs-3 fw-bold text-firdaus" id="statSantri">0</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+              <div class="text-muted small font-weight-bold">Ustadz / Muhaffiz</div>
+              <div class="fs-3 fw-bold text-firdaus" id="statGuru">0</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+              <div class="text-muted small font-weight-bold">Hadir Hari Ini</div>
+              <div class="fs-3 fw-bold text-success" id="statHadir">0</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card card-stat shadow-sm p-3 bg-white">
+              <div class="text-muted small font-weight-bold">Setoran Hari Ini</div>
+              <div class="fs-3 fw-bold text-primary" id="statSetoran">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabel Setoran Terbaru -->
+        <div class="card shadow-sm p-3 mt-4 border-0">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h5 class="fw-bold text-firdaus mb-1"><i class="fa-solid fa-clock-rotate-left me-2 text-gold"></i> Setoran Hafalan Santri Terbaru</h5>
+              <div class="text-muted small" id="dashboardTanggalHalaqah">Tanggal Halaqah: -</div>
+            </div>
+            <button class="btn btn-sm btn-outline-dark" onclick="loadDashboardData()"><i class="fa-solid fa-rotate me-1 text-gold"></i> Refresh</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr class="table-firdaus-head">
+                  <th>Tanggal</th>
+                  <th>Nama Lengkap</th>
+                  <th>Unit / Kelas</th>
+                  <th>Jenis</th>
+                  <th>Setoran Hafalan</th>
+                  <th>Nilai</th>
+                  <th>Predikat</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardRecentSetoranBody">
+                <tr><td colspan="7" class="text-center text-muted">Memuat data setoran...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: PRESENSI HALAQAH -->
+      <div id="tab-presensi" class="tab-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h3 class="fw-bold text-firdaus mb-0">Presensi Halaqah</h3>
+          <ul class="nav nav-pills sub-nav">
+            <li class="nav-item">
+              <a class="nav-link active" id="btnSubIsiPresensi" href="#" onclick="switchSubPresensi('isi', event)"><i class="fa-solid fa-pen-to-square me-1"></i> Isi Presensi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="btnSubRekapPresensi" href="#" onclick="switchSubPresensi('rekap', event)"><i class="fa-solid fa-list-check me-1"></i> Rekapan Presensi</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- SUB 1: ISI PRESENSI -->
+        <div id="sub-isi-presensi">
+          <div class="card shadow-sm p-4 mb-4 border-0">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label class="form-label fw-bold text-firdaus">Pilih Halaqah</label>
+                <select id="presensiHalaqah" class="form-select" onchange="loadSantriPresensi()"></select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold text-firdaus">Sesi Halaqah</label>
+                <select id="presensiSesi" class="form-select">
+                  <option value="Subuh">Bakda Subuh</option>
+                  <option value="Sekolah">Jam Sekolah</option>
+                  <option value="Maghrib">Bakda Maghrib</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-bold text-firdaus">Jam Halaqah</label>
+                <input type="time" id="presensiJam" class="form-control" required>
+              </div>
+              <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-gold w-100" onclick="markAllHadir()"><i class="fa-solid fa-check-double me-1"></i> Hadir Semua</button>
+              </div>
+            </div>
+          </div>
+          <div class="card shadow-sm p-3 border-0">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr class="table-firdaus-head">
+                  <th>Nama Santri</th>
+                  <th>Status Kehadiran</th>
+                </tr>
+              </thead>
+              <tbody id="presensiTableBody">
+                <tr><td colspan="2" class="text-center text-muted">Pilih halaqah di atas untuk memuat daftar santri.</td></tr>
+              </tbody>
+            </table>
+            <button class="btn btn-firdaus w-100 mt-2 py-2" onclick="simpanPresensi()"><i class="fa-solid fa-floppy-disk me-2 text-gold"></i> Simpan Presensi Halaqah</button>
+          </div>
+        </div>
+
+        <!-- SUB 2: REKAPAN PRESENSI -->
+        <div id="sub-rekap-presensi" class="d-none">
+          <div class="card shadow-sm p-3 border-0">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-firdaus mb-0"><i class="fa-solid fa-table me-2 text-gold"></i> Rekapitulasi Presensi Santri</h5>
+              <div>
+                <button class="btn btn-sm btn-outline-success me-2" onclick="exportToExcel('rekapPresensiTable', 'Rekap_Presensi_SIMHAQ')"><i class="fa-solid fa-file-excel me-1"></i> Excel</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="exportToPDF('rekapPresensiTable', 'Rekap Presensi Halaqah SIMHAQ Al Firdaus')"><i class="fa-solid fa-file-pdf me-1"></i> PDF</button>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table id="rekapPresensiTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr class="table-firdaus-head">
+                    <th>Tanggal</th>
+                    <th>Jam</th>
+                    <th>Sesi</th>
+                    <th>Halaqah</th>
+                    <th>Nama Santri</th>
+                    <th>Unit/Kelas</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="rekapPresensiTableBody">
+                  <tr><td colspan="7" class="text-center text-muted">Memuat data rekapan presensi...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: INPUT SETORAN -->
+      <div id="tab-setoran" class="tab-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <h3 class="fw-bold text-firdaus mb-0">Setoran Hafalan</h3>
+          <ul class="nav nav-pills sub-nav">
+            <li class="nav-item">
+              <a class="nav-link active" id="btnSubFormSetoran" href="#" onclick="switchSubSetoran('form', event)"><i class="fa-solid fa-pen-to-square me-1"></i> Form Setoran & Rubrik</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="btnSubRekapSetoran" href="#" onclick="switchSubSetoran('rekap', event)"><i class="fa-solid fa-user-check me-1"></i> Rekapan Per Santri</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- SUB 1: FORM SETORAN -->
+        <div id="sub-form-setoran">
+          <div class="card shadow-sm p-4 border-0">
+            <form id="formSetoran" onsubmit="handleSaveSetoran(event)">
+              <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                  <label class="form-label fw-bold text-firdaus">Pilih Santri</label>
+                  <select id="setoranSantri" class="form-select" required></select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold text-firdaus">Jenis Setoran</label>
+                  <select id="setoranJenis" class="form-select" required>
+                    <option value="Ziyadah">Ziyadah (Hafalan Baru)</option>
+                    <option value="Murojaah">Murojaah (Pengulangan)</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold text-firdaus">Sesi Halaqah</label>
+                  <select id="setoranSesi" class="form-select">
+                    <option value="Subuh">Bakda Subuh</option>
+                    <option value="Sekolah">Jam Sekolah</option>
+                    <option value="Maghrib">Bakda Maghrib</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                  <label class="form-label fw-bold text-firdaus">Nama Surah</label>
+                  <input type="text" id="setoranSurah" class="form-control" placeholder="Contoh: Al-Baqarah" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold text-firdaus">Ayat (Awal - Akhir)</label>
+                  <div class="input-group">
+                    <input type="number" id="setoranAyatAwal" class="form-control" placeholder="Awal" required>
+                    <input type="number" id="setoranAyatAkhir" class="form-control" placeholder="Akhir" required>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-bold text-firdaus">Jumlah Halaman / Juz</label>
+                  <input type="text" id="setoranHalaman" class="form-control" placeholder="Contoh: 1/2 Halaman">
+                </div>
+              </div>
+
+              <h5 class="fw-bold text-firdaus mt-4 pb-2 border-bottom"><i class="fa-solid fa-star text-gold me-2"></i> Rubrik Penilaian Al Firdaus</h5>
+              <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                  <label class="form-label font-weight-bold">Kelancaran (40%)</label>
+                  <input type="number" id="scoreKelancaran" class="form-control" min="0" max="100" value="85" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label font-weight-bold">Tajwid & Mad (30%)</label>
+                  <input type="number" id="scoreTajwid" class="form-control" min="0" max="100" value="85" required>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label font-weight-bold">Makharijul Huruf (20%)</label>
+                  <input type="number" id="scoreMakhraj" class="form-control" min="0" max="100" value="85" required>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold text-firdaus">Catatan Pembinaan / Evaluasi Ustadz</label>
+                <textarea id="setoranCatatan" class="form-control" rows="2" placeholder="Catatan evaluasi makhraj, tajwid, atau kelancaran..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-firdaus px-4 py-2"><i class="fa-solid fa-paper-plane me-2 text-gold"></i> Simpan Setoran Hafalan</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- SUB 2: REKAPAN PER SANTRI -->
+        <div id="sub-rekap-setoran" class="d-none">
+          <div class="card shadow-sm p-4 mb-3 border-0">
+            <div class="row g-3 align-items-center">
+              <div class="col-md-6">
+                <label class="form-label fw-bold text-firdaus">Filter Santri</label>
+                <select id="filterRekapSantri" class="form-select" onchange="loadRekapSetoranPerSantri()">
+                  <option value="ALL">-- Semua Santri --</option>
+                </select>
+              </div>
+              <div class="col-md-6 text-end pt-4">
+                <button class="btn btn-outline-success me-2" onclick="exportToExcel('rekapSetoranTable', 'Rekap_Setoran_Per_Santri')"><i class="fa-solid fa-file-excel me-1"></i> Excel</button>
+                <button class="btn btn-outline-danger" onclick="exportToPDF('rekapSetoranTable', 'Rekap Setoran Hafalan Per Santri SIMHAQ')"><i class="fa-solid fa-file-pdf me-1"></i> PDF</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow-sm p-3 border-0">
+            <div class="table-responsive">
+              <table id="rekapSetoranTable" class="table table-bordered table-striped align-middle">
+                <thead>
+                  <tr class="table-firdaus-head">
+                    <th>Tanggal</th>
+                    <th>Sesi</th>
+                    <th>Nama Santri</th>
+                    <th>Unit/Kelas</th>
+                    <th>Jenis</th>
+                    <th>Surah & Ayat</th>
+                    <th>Halaman</th>
+                    <th>Nilai Akhir</th>
+                    <th>Predikat</th>
+                    <th>Catatan</th>
+                  </tr>
+                </thead>
+                <tbody id="rekapSetoranTableBody">
+                  <tr><td colspan="10" class="text-center text-muted">Pilih santri atau muat data rekapan...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: LAPORAN CAPAIAN -->
+      <div id="tab-laporan" class="tab-content d-none">
+        <h3 class="fw-bold text-firdaus mb-3">Laporan & Rekapitulasi Capaian Hafalan</h3>
+        <div class="card shadow-sm p-3 border-0">
+          <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-sm btn-outline-success me-2" onclick="exportToExcel('laporanUmumTable', 'Laporan_Capaian_Hafalan')"><i class="fa-solid fa-file-excel me-1"></i> Excel</button>
+            <button class="btn btn-sm btn-outline-danger" onclick="exportToPDF('laporanUmumTable', 'Laporan Capaian Hafalan Santri Al Firdaus')"><i class="fa-solid fa-file-pdf me-1"></i> PDF</button>
+          </div>
+          <div class="table-responsive">
+            <table id="laporanUmumTable" class="table table-striped align-middle">
+              <thead>
+                <tr class="table-firdaus-head">
+                  <th>Tanggal</th>
+                  <th>Santri</th>
+                  <th>Jenis</th>
+                  <th>Surah & Ayat</th>
+                  <th>Nilai Akhir</th>
+                  <th>Predikat</th>
+                </tr>
+              </thead>
+              <tbody id="laporanTableBody">
+                <tr><td colspan="6" class="text-center">Memuat data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // KONFIGURASI DEPLOYMENT GITHUB PAGES
+  // Masukkan URL Google Apps Script Web App jika di-deploy ke GitHub Pages:
+  // =========================================================================
+  const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxTq8cldhpkw2SEn9O0CLEQibEsUkqveUunPRd7Q9rZnl5u54TPf73G_TPKBwblxcuLbA/exec"; 
+
+  // FALLBACK LOGO AL FIRDAUS (SVG LOGO BADGE EMBEDDED)
+  const AL_FIRDAUS_FALLBACK_LOGO = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230F2042' stroke='%23D4AF37' stroke-width='4'/><path d='M50 15 L58 35 L80 35 L62 48 L69 70 L50 56 L31 70 L38 48 L20 35 L42 35 Z' fill='%23D4AF37'/></svg>";
+
+  let state = {
+    user: null,
+    master: { santri: [], guru: [], halaqah: [] }
+  };
+
+  // UNIVERSAL BACKEND RUNNER (Support Google Apps Script & GitHub Pages)
+  function callBackend(fnName, argsArray, onSuccess, onFailure) {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      let runner = google.script.run;
+      if (onSuccess) runner = runner.withSuccessHandler(onSuccess);
+      if (onFailure) runner = runner.withFailureHandler(onFailure);
+      runner[fnName].apply(runner, argsArray);
+    } else if (GAS_WEB_APP_URL && GAS_WEB_APP_URL.trim() !== "") {
+      let payload = { action: fnName };
+      if (fnName === 'loginUser') { payload.username = argsArray[0]; payload.password = argsArray[1]; }
+      else if (fnName === 'getDashboardData') { payload.role = argsArray[0]; payload.userRelatedId = argsArray[1]; }
+      else if (fnName === 'savePresensiBulk') { payload.presensiArray = argsArray[0]; }
+      else if (fnName === 'saveSetoran') { payload.data = argsArray[0]; }
+      else if (fnName === 'getLaporanSetoran') { payload.idSantriFilter = argsArray[0]; }
+
+      fetch(GAS_WEB_APP_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => { if (onSuccess) onSuccess(res); })
+      .catch(err => { if (onFailure) onFailure(err); });
+    } else {
+      if (onFailure) onFailure({ message: 'URL Web App belum diset pada variabel GAS_WEB_APP_URL.' });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    
+    // Default Jam
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('presensiJam').value = `${hours}:${minutes}`;
+  });
+
+  // Login Handler
+  document.getElementById('formLogin').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnLogin');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Memproses...';
+
+    const u = document.getElementById('loginUsername').value;
+    const p = document.getElementById('loginPassword').value;
+
+    callBackend('loginUser', [u, p], 
+      res => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket me-2"></i> MASUK SISTEM';
+        if (res && res.success) {
+          state.user = res.user;
+          document.getElementById('loginView').classList.add('d-none');
+          document.getElementById('appView').classList.remove('d-none');
+          document.getElementById('userInfo').innerHTML = `<i class="fa-solid fa-user-circle text-gold me-1"></i> ${res.user.name} (${res.user.role})`;
+          loadDashboardData();
+          loadMasterData();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Gagal Login',
+            text: res ? res.message : 'Username atau Password salah!',
+            confirmButtonColor: '#0F2042'
+          });
+        }
+      },
+      err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket me-2"></i> MASUK SISTEM';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error Server',
+          text: err.message || 'Gagal terhubung ke backend server.',
+          confirmButtonColor: '#0F2042'
+        });
+      }
+    );
+  });
+
+  // Load Dashboard Stats
+  function loadDashboardData() {
+    callBackend('getDashboardData', [state.user ? state.user.role : '', state.user ? state.user.id : ''], data => {
+      if (!data) return;
+      document.getElementById('statSantri').textContent = data.totalSantri || 0;
+      document.getElementById('statGuru').textContent = data.totalGuru || 0;
+      document.getElementById('statHadir').textContent = data.hadirHariIni || 0;
+      document.getElementById('statSetoran').textContent = data.setoranHariIni || 0;
+      document.getElementById('dashboardTanggalHalaqah').textContent = `Tanggal Halaqah: ${data.tanggalHariIni || '-'}`;
+
+      const tbody = document.getElementById('dashboardRecentSetoranBody');
+      tbody.innerHTML = '';
+      if (!data.recentSetoran || data.recentSetoran.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Belum ada riwayat setoran hafalan hari ini.</td></tr>';
+        return;
+      }
+
+      data.recentSetoran.forEach(s => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${s.tanggal}</td>
+            <td><strong>${s.namaSantri}</strong></td>
+            <td>${s.unit}</td>
+            <td><span class="badge ${s.jenis === 'Ziyadah' ? 'bg-success' : 'bg-primary'}">${s.jenis}</span></td>
+            <td>${s.hafalan}</td>
+            <td><strong>${s.nilaiAkhir}</strong></td>
+            <td><span class="badge bg-secondary">${s.predikat}</span></td>
+          </tr>
+        `;
+      });
+    });
+  }
+
+  function loadMasterData() {
+    callBackend('getMasterData', [], master => {
+      state.master = master || { santri: [], guru: [], halaqah: [] };
+      populateDropdowns();
+    });
+  }
+
+  function populateDropdowns() {
+    const selHalaqah = document.getElementById('presensiHalaqah');
+    selHalaqah.innerHTML = '<option value="">-- Pilih Halaqah --</option>';
+    if (state.master.halaqah && state.master.halaqah.length > 0) {
+      state.master.halaqah.forEach(h => {
+        const id = h.id_halaqah || h.id || '';
+        const nama = h.nama_halaqah || h.nama || id;
+        const unit = h.unit ? ` (${h.unit})` : '';
+        selHalaqah.innerHTML += `<option value="${id}">${nama}${unit}</option>`;
+      });
+    }
+
+    const selSantri = document.getElementById('setoranSantri');
+    const filterSantri = document.getElementById('filterRekapSantri');
+    selSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
+    filterSantri.innerHTML = '<option value="ALL">-- Semua Santri --</option>';
+
+    if (state.master.santri && state.master.santri.length > 0) {
+      state.master.santri.forEach(s => {
+        const id = s.id_santri || s.id || '';
+        const nama = s.nama_lengkap || s.nama || id;
+        const kelas = s.kelas ? ` - ${s.kelas}` : '';
+        const unit = s.unit ? ` (${s.unit})` : '';
+        selSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
+        filterSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
+      });
+    }
+  }
+
+  // SWAPPING TABS
+  function switchTab(tabName, event) {
+    if (event) event.preventDefault();
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('d-none'));
+    document.querySelectorAll('.sidebar .nav-link').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(`tab-${tabName}`).classList.remove('d-none');
+    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+    if (tabName === 'dashboard') loadDashboardData();
+    if (tabName === 'laporan') loadLaporanUmum();
+  }
+
+  function switchSubPresensi(type, e) {
+    if (e) e.preventDefault();
+    document.getElementById('btnSubIsiPresensi').classList.remove('active');
+    document.getElementById('btnSubRekapPresensi').classList.remove('active');
+    document.getElementById('sub-isi-presensi').classList.add('d-none');
+    document.getElementById('sub-rekap-presensi').classList.add('d-none');
+
+    if (type === 'isi') {
+      document.getElementById('btnSubIsiPresensi').classList.add('active');
+      document.getElementById('sub-isi-presensi').classList.remove('d-none');
+    } else {
+      document.getElementById('btnSubRekapPresensi').classList.add('active');
+      document.getElementById('sub-rekap-presensi').classList.remove('d-none');
+      loadRekapPresensi();
+    }
+  }
+
+  function switchSubSetoran(type, e) {
+    if (e) e.preventDefault();
+    document.getElementById('btnSubFormSetoran').classList.remove('active');
+    document.getElementById('btnSubRekapSetoran').classList.remove('active');
+    document.getElementById('sub-form-setoran').classList.add('d-none');
+    document.getElementById('sub-rekap-setoran').classList.add('d-none');
+
+    if (type === 'form') {
+      document.getElementById('btnSubFormSetoran').classList.add('active');
+      document.getElementById('sub-form-setoran').classList.remove('d-none');
+    } else {
+      document.getElementById('btnSubRekapSetoran').classList.add('active');
+      document.getElementById('sub-rekap-setoran').classList.remove('d-none');
+      loadRekapSetoranPerSantri();
+    }
+  }
+
+  function loadSantriPresensi() {
+    const hId = document.getElementById('presensiHalaqah').value;
+    const tbody = document.getElementById('presensiTableBody');
+    tbody.innerHTML = '';
+
+    if (!hId) {
+      tbody.innerHTML = '<tr><td colspan="2" class="text-center text-muted">Silakan pilih halaqah terlebih dahulu.</td></tr>';
+      return;
+    }
+
+    const targetId = String(hId).trim().toLowerCase();
+    const filtered = state.master.santri.filter(s => {
+      const h1 = String(s.id_halaqah || '').trim().toLowerCase();
+      const h2 = String(s.id_halaqah_sekolah || '').trim().toLowerCase();
+      const h3 = String(s.id_halaqah_pondok || '').trim().toLowerCase();
+      const status = String(s.status || 'aktif').trim().toLowerCase();
+      return (h1 === targetId || h2 === targetId || h3 === targetId) && (status === 'aktif' || status === 'true' || status === '');
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="2" class="text-center text-muted">Tidak ada santri aktif yang terdaftar di halaqah ini.</td></tr>';
+      return;
+    }
+
+    filtered.forEach(s => {
+      const idSantri = s.id_santri || s.id;
+      const namaSantri = s.nama_lengkap || s.nama || idSantri;
+      tbody.innerHTML += `
+        <tr>
+          <td><strong>${namaSantri}</strong> <span class="text-muted small">(${s.kelas || s.unit || ''})</span></td>
+          <td>
+            <select class="form-select form-select-sm presensi-status" data-santri="${idSantri}">
+              <option value="Hadir">✅ Hadir</option>
+              <option value="Terlambat">🟡 Terlambat</option>
+              <option value="Izin">🟠 Izin</option>
+              <option value="Sakit">🔴 Sakit</option>
+              <option value="Alfa">⚫ Alfa</option>
+            </select>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  function markAllHadir() {
+    document.querySelectorAll('.presensi-status').forEach(select => select.value = 'Hadir');
+  }
+
+  function simpanPresensi() {
+    const hId = document.getElementById('presensiHalaqah').value;
+    const sesi = document.getElementById('presensiSesi').value;
+    const jam = document.getElementById('presensiJam').value;
+    const tgl = new Date().toISOString().split('T')[0];
+
+    if (!hId) {
+      Swal.fire({ icon: 'warning', title: 'Halaqah Belum Dipilih', text: 'Pilih halaqah terlebih dahulu!', confirmButtonColor: '#0F2042' });
+      return;
+    }
+
+    const records = [];
+    document.querySelectorAll('.presensi-status').forEach(select => {
+      records.push({
+        tanggal: tgl,
+        jam: jam || '-',
+        sesi: sesi,
+        idHalaqah: hId,
+        idSantri: select.getAttribute('data-santri'),
+        status: select.value
+      });
+    });
+
+    if (records.length === 0) {
+      Swal.fire({ icon: 'warning', title: 'Data Kosong', text: 'Tidak ada santri yang ditampilkan!', confirmButtonColor: '#0F2042' });
+      return;
+    }
+
+    callBackend('savePresensiBulk', [records], 
+      res => {
+        if (res && res.success) {
+          Swal.fire({ icon: 'success', title: 'Presensi Tersimpan!', text: res.message, timer: 2000, showConfirmButton: false });
+          loadDashboardData();
+        } else {
+          Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: res ? res.message : 'Terjadi kesalahan', confirmButtonColor: '#0F2042' });
+        }
+      },
+      err => Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: err.message, confirmButtonColor: '#0F2042' })
+    );
+  }
+
+  function loadRekapPresensi() {
+    callBackend('getRekapPresensi', [], data => {
+      const tbody = document.getElementById('rekapPresensiTableBody');
+      tbody.innerHTML = '';
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Belum ada data rekapan presensi.</td></tr>';
+        return;
+      }
+      data.forEach(p => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${p.tanggal}</td>
+            <td>${p.jam}</td>
+            <td>${p.sesi}</td>
+            <td>${p.namaHalaqah}</td>
+            <td><strong>${p.namaSantri}</strong></td>
+            <td>${p.unit}</td>
+            <td><span class="badge ${p.status === 'Hadir' ? 'bg-success' : 'bg-warning'}">${p.status}</span></td>
+          </tr>
+        `;
+      });
+    });
+  }
+
+  function handleSaveSetoran(e) {
+    e.preventDefault();
+    const idSantri = document.getElementById('setoranSantri').value;
+    if (!idSantri) {
+      Swal.fire({ icon: 'warning', title: 'Santri Belum Dipilih', text: 'Silakan pilih santri terlebih dahulu!', confirmButtonColor: '#0F2042' });
+      return;
+    }
+
+    const payload = {
+      tanggal: new Date().toISOString().split('T')[0],
+      idSantri: idSantri,
+      idGuru: (state.user && state.user.id) ? state.user.id : 'GURU-01',
+      jenis: document.getElementById('setoranJenis').value,
+      sesi: document.getElementById('setoranSesi').value,
+      surah: document.getElementById('setoranSurah').value,
+      ayatAwal: document.getElementById('setoranAyatAwal').value,
+      ayatAkhir: document.getElementById('setoranAyatAkhir').value,
+      halaman: document.getElementById('setoranHalaman').value,
+      kelancaran: document.getElementById('scoreKelancaran').value,
+      tajwid: document.getElementById('scoreTajwid').value,
+      makhraj: document.getElementById('scoreMakhraj').value,
+      catatan: document.getElementById('setoranCatatan').value
+    };
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Menyimpan...';
+
+    callBackend('saveSetoran', [payload],
+      res => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2 text-gold"></i> Simpan Setoran Hafalan';
+        if (res && res.success) {
+          Swal.fire({ icon: 'success', title: 'Setoran Berhasil Disimpan!', text: res.message, confirmButtonColor: '#0F2042' });
+          document.getElementById('formSetoran').reset();
+          document.getElementById('scoreKelancaran').value = 85;
+          document.getElementById('scoreTajwid').value = 85;
+          document.getElementById('scoreMakhraj').value = 85;
+          loadDashboardData();
+        } else {
+          Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: res ? res.message : 'Terjadi kesalahan', confirmButtonColor: '#0F2042' });
+        }
+      },
+      err => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2 text-gold"></i> Simpan Setoran Hafalan';
+        Swal.fire({ icon: 'error', title: 'Error Server', text: err.message, confirmButtonColor: '#0F2042' });
+      }
+    );
+  }
+
+  function loadRekapSetoranPerSantri() {
+    const filterSantri = document.getElementById('filterRekapSantri').value;
+    callBackend('getLaporanSetoran', [filterSantri], data => {
+      const tbody = document.getElementById('rekapSetoranTableBody');
+      tbody.innerHTML = '';
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">Belum ada data setoran untuk santri ini.</td></tr>';
+        return;
+      }
+      data.forEach(s => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${s.tanggal}</td>
+            <td>${s.sesi}</td>
+            <td><strong>${s.namaSantri}</strong></td>
+            <td>${s.unit}</td>
+            <td><span class="badge ${s.jenis === 'Ziyadah' ? 'bg-success' : 'bg-primary'}">${s.jenis}</span></td>
+            <td>QS. ${s.surah}: ${s.ayat_awal}-${s.ayat_akhir}</td>
+            <td>${s.halaman}</td>
+            <td><strong>${s.nilai_akhir}</strong></td>
+            <td><span class="badge bg-secondary">${s.predikat}</span></td>
+            <td>${s.catatan}</td>
+          </tr>
+        `;
+      });
+    });
+  }
+
+  function loadLaporanUmum() {
+    callBackend('getLaporanSetoran', ['ALL'], data => {
+      const tbody = document.getElementById('laporanTableBody');
+      tbody.innerHTML = '';
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Belum ada riwayat setoran.</td></tr>';
+        return;
+      }
+      data.forEach(row => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${row.tanggal}</td>
+            <td><strong>${row.namaSantri}</strong></td>
+            <td><span class="badge ${row.jenis === 'Ziyadah' ? 'bg-success':'bg-primary'}">${row.jenis}</span></td>
+            <td>QS. ${row.surah}: ${row.ayat_awal}-${row.ayat_akhir}</td>
+            <td><strong>${row.nilai_akhir}</strong></td>
+            <td><span class="badge bg-secondary">${row.predikat}</span></td>
+          </tr>
+        `;
+      });
+    });
+  }
+
+  // UTILITY EXPORT EXCEL & PDF
+  function exportToExcel(tableId, filename) {
+    const table = document.getElementById(tableId);
+    if (!table) return;
+    const wb = XLSX.utils.table_to_book(table, { sheet: "SIMHAQ_AlFirdaus" });
+    XLSX.writeFile(wb, `${filename}_${new Date().toISOString().split('T')[0]}.xlsx`);
+  }
+
+  function exportToPDF(tableId, title) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'pt', 'a4');
+    
+    doc.setFontSize(14);
+    doc.setTextColor(15, 32, 66);
+    doc.text(title, 40, 30);
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Dicetak pada: ${new Date().toLocaleDateString('id-ID')} | SIT & Ponpes Al Firdaus Bandarlampung`, 40, 45);
+
+    doc.autoTable({ 
+      html: '#' + tableId, 
+      startY: 60,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [15, 32, 66], textColor: [212, 175, 55] }
+    });
+
+    doc.save(`${title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+  }
+
+  function logout() {
+    location.reload();
+  }
+</script>
+</body>
+</html>
