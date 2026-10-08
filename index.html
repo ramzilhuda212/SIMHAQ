@@ -61,6 +61,17 @@
       border-color: var(--af-gold);
     }
 
+    /* CLOCK DISPLAY HIGH VISIBILITY */
+    .clock-badge {
+      background-color: rgba(11, 27, 61, 0.85) !important;
+      color: var(--af-gold) !important;
+      border: 1.5px solid var(--af-gold) !important;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 0 10px rgba(245, 177, 29, 0.2);
+    }
+
     /* LAYOUT WRAPPER */
     .app-wrapper {
       display: flex;
@@ -277,6 +288,7 @@
       min-height: 50px;
       text-align: center;
       font-weight: bold;
+      font-size: 1.05rem;
     }
   </style>
 </head>
@@ -318,7 +330,7 @@
 
 <!-- VIEW MAIN APP -->
 <div id="appView" class="d-none">
-  <!-- TOP NAVBAR DENGAN JAM & TANGGAL REALTIME -->
+  <!-- TOP NAVBAR DENGAN JAM & TANGGAL REALTIME (KUNING KONTRASTING) -->
   <header class="top-navbar px-3 py-2 d-flex align-items-center justify-content-between text-white shadow-sm">
     <div class="d-flex align-items-center">
       <button class="btn btn-hamburger me-2" id="btnToggleSidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
@@ -329,10 +341,10 @@
       <span class="fw-bold fs-6 text-gold d-inline d-sm-none">SIMHAQ</span>
     </div>
     
-    <!-- JAM & TANGGAL REALTIME (TOGGLE MASEHI & HIJRIYAH) -->
+    <!-- JAM & TANGGAL REALTIME -->
     <div class="text-end">
-      <span class="badge bg-gold text-dark p-2 border border-warning shadow-sm font-monospace" id="currentDateDisplay">
-        <i class="fa-solid fa-clock text-dark me-1"></i> Memuat waktu...
+      <span class="badge clock-badge p-2 font-monospace" id="currentDateDisplay">
+        <i class="fa-solid fa-clock text-gold me-1"></i> Memuat waktu...
       </span>
     </div>
   </header>
@@ -380,6 +392,11 @@
           </a>
         </li>
         <li>
+          <a href="#" class="nav-link" onclick="switchTab('tasmi-sertif', event)">
+            <i class="fa-solid fa-award me-2 text-gold"></i> Tasmi' & Sertifikasi
+          </a>
+        </li>
+        <li>
           <a href="#" class="nav-link" onclick="switchTab('rapor', event)">
             <i class="fa-solid fa-scroll me-2 text-gold"></i> Rapor Hafalan
           </a>
@@ -405,7 +422,6 @@
         
         <!-- STAT CARDS DENGAN IKON -->
         <div class="row g-3 mb-4">
-          <!-- Total Santri -->
           <div class="col-12 col-sm-6 col-xl-3">
             <div class="card card-stat shadow-sm p-3 bg-white h-100">
               <div class="d-flex align-items-center justify-content-between">
@@ -420,7 +436,6 @@
             </div>
           </div>
 
-          <!-- Ustadz / Muhaffiz -->
           <div class="col-12 col-sm-6 col-xl-3">
             <div class="card card-stat shadow-sm p-3 bg-white h-100">
               <div class="d-flex align-items-center justify-content-between">
@@ -435,7 +450,6 @@
             </div>
           </div>
 
-          <!-- Hadir Hari Ini -->
           <div class="col-12 col-sm-6 col-xl-3">
             <div class="card card-stat shadow-sm p-3 bg-white h-100">
               <div class="d-flex align-items-center justify-content-between">
@@ -450,7 +464,6 @@
             </div>
           </div>
 
-          <!-- Setoran Hari Ini -->
           <div class="col-12 col-sm-6 col-xl-3">
             <div class="card card-stat shadow-sm p-3 bg-white h-100">
               <div class="d-flex align-items-center justify-content-between">
@@ -740,7 +753,79 @@
         </div>
       </div>
 
-      <!-- TAB 5: RAPOR HAFALAN AL QURAN (NEW FEATURE) -->
+      <!-- TAB 5: MENU TASMI' & SERTIFIKASI (NEW FEATURE) -->
+      <div id="tab-tasmi-sertif" class="tab-content d-none">
+        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+          <div>
+            <h3 class="fw-bold text-firdaus mb-0"><i class="fa-solid fa-award me-2 text-gold"></i> Tasmi' & Sertifikasi Hafalan</h3>
+            <small class="text-muted">Input & Evaluasi Penilaian Ujian Tasmi' serta Sertifikasi Santri</small>
+          </div>
+        </div>
+
+        <div class="card shadow-sm p-3 p-md-4 mb-4 border-0">
+          <form id="formTasmiSertif" onsubmit="handleSaveTasmiSertif(event)">
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-md-4">
+                <label class="form-label fw-bold text-firdaus">Pilih Santri</label>
+                <select id="tasmiSantriSelect" class="form-select" required></select>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4">
+                <label class="form-label fw-bold text-firdaus">Kategori Ujian</label>
+                <select id="tasmiKategoriSelect" class="form-select" required>
+                  <option value="Tasmi">Tasmi' Hafalan</option>
+                  <option value="Sertifikasi">Sertifikasi Hafalan</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6 col-md-4">
+                <label class="form-label fw-bold text-firdaus">Juz / Keterangan Ujian</label>
+                <input type="text" id="tasmiJuzInput" class="form-control" placeholder="Contoh: Tasmi' Juz 30" required>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-sm-4">
+                <label class="form-label fw-bold text-firdaus">Nilai Angka (0 - 100)</label>
+                <input type="number" id="tasmiNilaiInput" class="form-control" min="0" max="100" placeholder="Contoh: 85" oninput="autoCalculatePredikatTasmi()" required>
+              </div>
+              <div class="col-12 col-sm-4">
+                <label class="form-label fw-bold text-firdaus">Predikat Otomatis</label>
+                <input type="text" id="tasmiPredikatInput" class="form-control bg-light fw-bold" readonly placeholder="Calculated...">
+              </div>
+              <div class="col-12 col-sm-4">
+                <label class="form-label fw-bold text-firdaus">Tanggal Ujian</label>
+                <input type="date" id="tasmiTanggalInput" class="form-control" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-firdaus px-4 py-2"><i class="fa-solid fa-floppy-disk me-2 text-gold"></i> Simpan Penilaian Tasmi' / Sertifikasi</button>
+          </form>
+        </div>
+
+        <!-- TABEL RIWAYAT TASMI & SERTIFIKASI -->
+        <div class="card shadow-sm p-3 border-0">
+          <h5 class="fw-bold text-firdaus mb-3"><i class="fa-solid fa-list-check me-2 text-gold"></i> Riwayat Ujian Tasmi' & Sertifikasi Santri</h5>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+              <thead>
+                <tr class="table-firdaus-head">
+                  <th>Tanggal</th>
+                  <th>Nama Santri</th>
+                  <th>Unit / Kelas</th>
+                  <th>Kategori</th>
+                  <th>Juz / Keterangan</th>
+                  <th>Nilai Angka</th>
+                  <th>Predikat</th>
+                </tr>
+              </thead>
+              <tbody id="tasmiTableBody">
+                <tr><td colspan="7" class="text-center text-muted">Belum ada data Tasmi' atau Sertifikasi yang disimpan.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: RAPOR HAFALAN AL QURAN -->
       <div id="tab-rapor" class="tab-content d-none">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom gap-2">
           <div>
@@ -771,7 +856,7 @@
           </div>
         </div>
 
-        <!-- TAMPILAN DESIGN RAPOR HAFALAN (SENADA GAMBAR EVALUASI TAHFIZH) -->
+        <!-- TAMPILAN DESIGN RAPOR HAFALAN -->
         <div class="rapor-container shadow-sm mb-4" id="raporPrintArea">
           <div class="text-center mb-3">
             <h4 class="fw-bold text-dark mb-1" style="letter-spacing: 1px;">RAPOR CAPAIAN TAHFIZH AL-QUR'AN</h4>
@@ -810,21 +895,19 @@
               <tbody id="raporTableBody">
                 <tr><td colspan="10" class="text-center text-muted">Silakan pilih santri untuk menampilkan Rapor Hafalan.</td></tr>
               </tbody>
-              <tfoot id="raporTableFoot">
-                <!-- Calculated totals & Score highlights match format gambar -->
-              </tfoot>
+              <tfoot id="raporTableFoot"></tfoot>
             </table>
           </div>
 
           <!-- KOTAK TASMI', SERTIF, & DESKRIPSI EVALUASI -->
           <div class="row g-3 mt-2">
             <div class="col-6">
-              <div class="rapor-box-title">TASMI' Juz 30</div>
-              <div class="rapor-box-content" id="raporTasmiVal">83</div>
+              <div class="rapor-box-title">TASMI'</div>
+              <div class="rapor-box-content text-firdaus" id="raporTasmiVal">-</div>
             </div>
             <div class="col-6">
               <div class="rapor-box-title">SERTIF</div>
-              <div class="rapor-box-content" id="raporSertifVal">-</div>
+              <div class="rapor-box-content text-firdaus" id="raporSertifVal">-</div>
             </div>
             <div class="col-12">
               <div class="rapor-box-title">DESKRIPSI EVALUASI</div>
@@ -852,10 +935,11 @@
 
   let state = {
     user: null,
-    master: { santri: [], guru: [], halaqah: [] }
+    master: { santri: [], guru: [], halaqah: [] },
+    tasmiSertif: []
   };
 
-  // TOGGLE HAMBURGER SIDEBAR (RESPONSIVE FOR ALL DEVICES)
+  // TOGGLE HAMBURGER SIDEBAR
   function toggleSidebar() {
     const sidebar = document.getElementById('mainSidebar');
     const backdrop = document.getElementById('sidebarBackdrop');
@@ -872,12 +956,12 @@
     }
   }
 
-  // REALTIME CLOCK WITH MASEHI & HIJRIYAH DYNAMIC TOGGLE
+  // REALTIME CLOCK WITH MASEHI & HIJRIYAH DYNAMIC TOGGLE (HIGH VISIBILITY)
   let clockDisplayMode = 'masehi';
 
   setInterval(() => {
     clockDisplayMode = (clockDisplayMode === 'masehi') ? 'hijri' : 'masehi';
-  }, 4000); // Switch every 4 seconds
+  }, 4000);
 
   function updateRealtimeClock() {
     const now = new Date();
@@ -902,7 +986,7 @@
 
     const clockElem = document.getElementById('currentDateDisplay');
     if (clockElem) {
-      clockElem.innerHTML = `<i class="fa-solid fa-clock text-dark me-1"></i> ${dateStr} - ${timeStr}`;
+      clockElem.innerHTML = `<i class="fa-solid fa-clock text-gold me-1"></i> <span style="color:#F5B11D;">${dateStr}</span> - <span style="color:#FFFFFF;">${timeStr}</span>`;
     }
   }
 
@@ -944,6 +1028,7 @@
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     document.getElementById('presensiJam').value = `${hours}:${minutes}`;
+    document.getElementById('tasmiTanggalInput').value = new Date().toISOString().split('T')[0];
   });
 
   // Login Handler
@@ -1044,10 +1129,12 @@
     const selSantri = document.getElementById('setoranSantri');
     const filterSantri = document.getElementById('filterRekapSantri');
     const raporSantri = document.getElementById('raporSantriSelect');
+    const tasmiSantri = document.getElementById('tasmiSantriSelect');
 
     selSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
     filterSantri.innerHTML = '<option value="ALL">-- Semua Santri --</option>';
     raporSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
+    tasmiSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
 
     if (state.master.santri && state.master.santri.length > 0) {
       state.master.santri.forEach(s => {
@@ -1058,6 +1145,7 @@
         selSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
         filterSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
         raporSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
+        tasmiSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
       });
     }
   }
@@ -1081,6 +1169,7 @@
 
     if (tabName === 'dashboard') loadDashboardData();
     if (tabName === 'laporan') loadLaporanUmum();
+    if (tabName === 'tasmi-sertif') renderTasmiTable();
     if (tabName === 'rapor') generateRaporHafalan();
   }
 
@@ -1282,6 +1371,90 @@
     );
   }
 
+  // AUTO PREDIKAT FOR TASMI' & SERTIFIKASI
+  function getPredikatFromScore(val) {
+    const num = Number(val) || 0;
+    if (num >= 90) return 'Mumtaz';
+    if (num >= 80) return 'Jayyid Jiddan';
+    if (num >= 70) return 'Jayyid';
+    if (num >= 60) return 'Maqbul';
+    return 'Rasib';
+  }
+
+  function autoCalculatePredikatTasmi() {
+    const score = document.getElementById('tasmiNilaiInput').value;
+    document.getElementById('tasmiPredikatInput').value = score !== '' ? getPredikatFromScore(score) : '';
+  }
+
+  // HANDLE SAVE TASMI' & SERTIFIKASI
+  function handleSaveTasmiSertif(e) {
+    e.preventDefault();
+    const idSantri = document.getElementById('tasmiSantriSelect').value;
+    const kategori = document.getElementById('tasmiKategoriSelect').value;
+    const juz = document.getElementById('tasmiJuzInput').value;
+    const nilai = document.getElementById('tasmiNilaiInput').value;
+    const tanggal = document.getElementById('tasmiTanggalInput').value;
+
+    if (!idSantri) {
+      Swal.fire({ icon: 'warning', title: 'Santri Belum Dipilih', text: 'Pilih santri terlebih dahulu!', confirmButtonColor: '#0F2042' });
+      return;
+    }
+
+    const predikat = getPredikatFromScore(nilai);
+    const santriObj = state.master.santri.find(s => String(s.id_santri || s.id || '') === String(idSantri));
+    const namaSantri = santriObj ? (santriObj.nama_lengkap || santriObj.nama) : idSantri;
+    const unit = santriObj ? (santriObj.kelas || santriObj.unit || '-') : '-';
+
+    const record = {
+      idSantri,
+      namaSantri,
+      unit,
+      jenis: kategori,
+      juz,
+      nilai: Number(nilai),
+      predikat,
+      tanggal
+    };
+
+    state.tasmiSertif.push(record);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Penilaian Disimpan!',
+      text: `Data ${kategori} berhasil disimpan. Nilai: ${nilai} (${predikat})`,
+      confirmButtonColor: '#0F2042'
+    });
+
+    document.getElementById('formTasmiSertif').reset();
+    document.getElementById('tasmiTanggalInput').value = new Date().toISOString().split('T')[0];
+    document.getElementById('tasmiPredikatInput').value = '';
+
+    renderTasmiTable();
+  }
+
+  function renderTasmiTable() {
+    const tbody = document.getElementById('tasmiTableBody');
+    tbody.innerHTML = '';
+    if (!state.tasmiSertif || state.tasmiSertif.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Belum ada data Tasmi\' atau Sertifikasi yang disimpan.</td></tr>';
+      return;
+    }
+
+    state.tasmiSertif.slice().reverse().forEach(row => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${row.tanggal}</td>
+          <td><strong>${row.namaSantri}</strong></td>
+          <td>${row.unit}</td>
+          <td><span class="badge ${row.jenis === 'Tasmi' ? 'bg-primary' : 'bg-success'}">${row.jenis}</span></td>
+          <td>${row.juz}</td>
+          <td><strong>${row.nilai}</strong></td>
+          <td><span class="badge bg-gold text-dark">${row.predikat}</span></td>
+        </tr>
+      `;
+    });
+  }
+
   function loadRekapSetoranPerSantri() {
     const filterSantri = document.getElementById('filterRekapSantri').value;
     callBackend('getLaporanSetoran', [filterSantri], data => {
@@ -1333,7 +1506,7 @@
     });
   }
 
-  // GENERATE RAPOR HAFALAN TAHFIZH (DENGAN FILTER PEKAN, BULAN, TENGAH SEMESTER, SEMESTER)
+  // GENERATE RAPOR HAFALAN TAHFIZH & LINK TASMI/SERTIF
   function generateRaporHafalan() {
     const idSantri = document.getElementById('raporSantriSelect').value;
     const periodeKey = document.getElementById('raporPeriodeSelect').value;
@@ -1346,6 +1519,8 @@
       document.getElementById('raporKelasSantri').textContent = '-';
       tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Silakan pilih nama santri di atas untuk menampilkan Rapor Capaian Hafalan.</td></tr>';
       tfoot.innerHTML = '';
+      document.getElementById('raporTasmiVal').textContent = '-';
+      document.getElementById('raporSertifVal').textContent = '-';
       return;
     }
 
@@ -1364,11 +1539,28 @@
 
     document.getElementById('raporPeriodeText').textContent = `Periode Evaluation: ${periodeLabel}`;
 
+    // CONNECT TASMI' & SERTIFIKASI SCORES DIRECTLY
+    const tasmiList = state.tasmiSertif.filter(t => String(t.idSantri) === String(idSantri) && t.jenis === 'Tasmi');
+    const sertifList = state.tasmiSertif.filter(t => String(t.idSantri) === String(idSantri) && t.jenis === 'Sertifikasi');
+
+    if (tasmiList.length > 0) {
+      const lastTasmi = tasmiList[tasmiList.length - 1];
+      document.getElementById('raporTasmiVal').textContent = `${lastTasmi.nilai} (${lastTasmi.predikat})`;
+    } else {
+      document.getElementById('raporTasmiVal').textContent = '-';
+    }
+
+    if (sertifList.length > 0) {
+      const lastSertif = sertifList[sertifList.length - 1];
+      document.getElementById('raporSertifVal').textContent = `${lastSertif.nilai} (${lastSertif.predikat})`;
+    } else {
+      document.getElementById('raporSertifVal').textContent = '-';
+    }
+
     callBackend('getLaporanSetoran', [idSantri], data => {
       tbody.innerHTML = '';
       tfoot.innerHTML = '';
 
-      // Filter by days
       const now = new Date();
       const filtered = (data || []).filter(item => {
         if (!item.tanggal || item.tanggal === '-') return true;
@@ -1381,7 +1573,6 @@
       if (!filtered || filtered.length === 0) {
         tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Belum ada catatan setoran hafalan pada periode ini.</td></tr>';
         
-        // Render Empty Footers
         tfoot.innerHTML = `
           <tr>
             <td colspan="5" class="fw-bold text-end">Jumlah Capaian (Lembar)</td>
@@ -1410,20 +1601,14 @@
             <td>0</td>
           </tr>
         `;
-        document.getElementById('raporTasmiVal').textContent = '-';
-        document.getElementById('raporSertifVal').textContent = '-';
         document.getElementById('raporDeskripsiVal').textContent = `Ananda belum memiliki riwayat setoran hafalan pada periode ${periodeLabel}. Kuantitas hafalan terkumpul 0 lembar dari target ${targetLembar} lembar.`;
         return;
       }
 
       let totalLembar = 0;
-      let sumTajwid = 0;
-      let sumMakhraj = 0;
-      let sumKelancaran = 0;
       let sumNilai = 0;
 
       filtered.forEach((row, idx) => {
-        // Parse lembar
         let lembarVal = parseFloat(row.halaman) || 0.25;
         totalLembar += lembarVal;
 
@@ -1432,9 +1617,6 @@
         let kelancaranVal = 80;
         let nilaiVal = Number(row.nilai_akhir) || 80;
 
-        sumTajwid += tajwidVal;
-        sumMakhraj += makhrajVal;
-        sumKelancaran += kelancaranVal;
         sumNilai += nilaiVal;
 
         tbody.innerHTML += `
@@ -1488,8 +1670,6 @@
         </tr>
       `;
 
-      document.getElementById('raporTasmiVal').textContent = avgKualitas >= 80 ? '83' : '-';
-      document.getElementById('raporSertifVal').textContent = avgKualitas >= 85 ? 'Mumtaz' : '-';
       document.getElementById('raporDeskripsiVal').innerHTML = `
         Ananda telah memahami dan menerapkan bacaan ghunnah, hukum nun sukun atau tanwin, mim sukun, serta mad asli dan mad far'i dengan baik.<br><br>
         Selama <strong>${periodeLabel}</strong>, ananda telah menyetorkan hafalan sebanyak <strong>${totalLembar.toFixed(2)} lembar</strong> dari target hafalan <strong>${targetLembar} lembar</strong> (${persentaseCapaian}% capaian). Nilai akhir Tahsin Tahfizh ananda adalah <strong>${nilaiAkhir}</strong>.
@@ -1505,7 +1685,6 @@
     return list[surahName] || 70;
   }
 
-  // CETAK PRINT RAPOR
   function printRapor() {
     const printContents = document.getElementById('raporPrintArea').innerHTML;
     const originalContents = document.body.innerHTML;
@@ -1516,7 +1695,6 @@
     location.reload();
   }
 
-  // UTILITY EXPORT EXCEL & PDF
   function exportToExcel(tableId, filename) {
     const table = document.getElementById(tableId);
     if (!table) return;
