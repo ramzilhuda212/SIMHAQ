@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SIMHAQ - SIT & Ponpes Al Firdaus</title>
   
-  <!-- 1. FAVICON LOGO AL FIRDAUS -->
+  <!-- FAVICON LOGO AL FIRDAUS -->
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl">
   
   <!-- Bootstrap 5 CSS -->
@@ -19,7 +19,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
   
-  <!-- 2. WARNA DESAIN TEMA SENADA LOGO AL FIRDAUS -->
   <style>
     :root {
       --af-navy: #0F2042;
@@ -36,14 +35,51 @@
     body { 
       background-color: var(--af-bg); 
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      overflow-x: hidden;
     }
 
-    /* SIDEBAR STYLING DENGAN TEMA AL FIRDAUS */
+    /* TOP NAVBAR RESPONSIVE */
+    .top-navbar {
+      background-color: var(--af-navy);
+      border-bottom: 3px solid var(--af-gold);
+      position: sticky;
+      top: 0;
+      z-index: 1030;
+    }
+
+    .btn-hamburger {
+      background: transparent;
+      border: 1px solid rgba(245, 177, 29, 0.4);
+      color: var(--af-gold);
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-hamburger:hover {
+      background: var(--af-navy-light);
+      color: var(--af-gold);
+      border-color: var(--af-gold);
+    }
+
+    /* LAYOUT WRAPPER */
+    .app-wrapper {
+      display: flex;
+      min-height: calc(100vh - 58px);
+      width: 100%;
+      position: relative;
+    }
+
+    /* SIDEBAR STYLING */
     .sidebar { 
-      min-height: 100vh; 
+      width: 260px; 
+      min-width: 260px;
       background: linear-gradient(180deg, var(--af-navy-dark) 0%, var(--af-navy) 100%); 
       color: #fff; 
       border-right: 3px solid var(--af-gold);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1040;
+      display: flex;
+      flex-direction: column;
     }
     .sidebar .nav-link { 
       color: rgba(255,255,255,0.85); 
@@ -63,24 +99,80 @@
       border-left: 4px solid var(--af-gold);
     }
 
-    /* CARD STATS & ACCENTS */
+    /* MAIN CONTENT AREA */
+    .main-content {
+      flex-grow: 1;
+      width: calc(100% - 260px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 1.5rem;
+    }
+
+    /* DESKTOP COLLAPSED STATE */
+    @media (min-width: 992px) {
+      .sidebar.collapsed {
+        margin-left: -260px;
+      }
+      .sidebar.collapsed + .main-content {
+        width: 100%;
+      }
+    }
+
+    /* MOBILE / TABLET RESPONSIVE STATE */
+    @media (max-width: 991.98px) {
+      .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        margin-left: -260px;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.4);
+      }
+      .sidebar.mobile-open {
+        margin-left: 0;
+      }
+      .main-content {
+        width: 100% !important;
+        padding: 1rem;
+      }
+      .sidebar-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 1035;
+      }
+    }
+
+    /* CARD STATS WITH ICONS */
     .card-stat { 
       border-left: 5px solid var(--af-gold); 
-      border-radius: 10px;
-      transition: transform 0.2s ease;
+      border-radius: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .card-stat:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.08) !important;
     }
-    
+    .stat-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
     /* LOGIN CONTAINER & FRAME LOGO */
     .login-container { 
       max-width: 440px; 
-      margin-top: 50px; 
+      margin-top: 40px; 
+      margin-bottom: 40px;
     }
     .logo-frame-login {
-      width: 140px;
-      height: 140px;
+      width: 130px;
+      height: 130px;
       margin: 0 auto 15px auto;
       display: flex;
       align-items: center;
@@ -93,13 +185,13 @@
       filter: drop-shadow(0 4px 10px rgba(15, 32, 66, 0.25));
     }
     .logo-sidebar {
-      width: 45px;
-      height: 45px;
+      width: 42px;
+      height: 42px;
       object-fit: contain;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
-    /* CUSTOM BUTTONS */
+    /* CUSTOM BUTTONS & UTILITIES */
     .btn-firdaus {
       background-color: var(--af-navy);
       color: #ffffff;
@@ -121,7 +213,6 @@
       color: var(--af-navy-dark);
     }
 
-    /* TABLES & SUB-NAV */
     .table-firdaus-head {
       background-color: var(--af-navy) !important;
       color: #ffffff !important;
@@ -130,8 +221,8 @@
       color: var(--af-navy); 
       font-weight: 600; 
       border-radius: 20px; 
-      padding: 6px 18px; 
-      margin-right: 8px; 
+      padding: 6px 16px; 
+      margin-right: 6px; 
       border: 1px solid #ced4da;
     }
     .sub-nav .nav-link.active { 
@@ -142,7 +233,6 @@
     .text-firdaus { color: var(--af-navy); }
     .text-gold { color: var(--af-gold); }
     .bg-firdaus { background-color: var(--af-navy); color: #fff; }
-    .badge-gold { background-color: var(--af-gold); color: var(--af-navy-dark); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -182,16 +272,37 @@
 </div>
 
 <!-- VIEW MAIN APP -->
-<div id="appView" class="container-fluid d-none">
-  <div class="row">
-    <!-- SIDEBAR -->
-    <nav class="col-md-3 col-lg-2 sidebar p-3 d-flex flex-column">
-      <div class="d-flex align-items-center mb-3 pb-3 border-bottom border-warning">
-        <img id="imgLogoSidebar" src="https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl" class="logo-sidebar me-2" alt="Logo Al Firdaus" onerror="this.src='https://drive.google.com/uc?export=view&id=1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl'">
-        <div>
-          <span class="fs-5 fw-bold text-gold d-block" style="line-height: 1.1;">SIMHAQ</span>
-          <small style="font-size: 0.7rem; color: #e0e0e0;">SIT & Ponpes Al Firdaus</small>
+<div id="appView" class="d-none">
+  <!-- TOP NAVBAR DENGAN HAMBURGER MENU -->
+  <header class="top-navbar px-3 py-2 d-flex align-items-center justify-content-between text-white shadow-sm">
+    <div class="d-flex align-items-center">
+      <button class="btn btn-hamburger me-2" id="btnToggleSidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
+        <i class="fa-solid fa-bars fs-5"></i>
+      </button>
+      <img src="https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl" class="logo-sidebar me-2" alt="Logo Al Firdaus">
+      <span class="fw-bold fs-5 text-gold d-none d-sm-inline">SIMHAQ AL FIRDAUS</span>
+      <span class="fw-bold fs-6 text-gold d-inline d-sm-none">SIMHAQ</span>
+    </div>
+    <div>
+      <span class="badge bg-gold text-dark p-2 border border-warning" id="currentDateDisplay"></span>
+    </div>
+  </header>
+
+  <div class="app-wrapper">
+    <!-- OVERLAY BACKDROP FOR MOBILE -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop d-none" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR LEFT MENU -->
+    <nav class="sidebar p-3" id="mainSidebar">
+      <div class="d-flex align-items-center justify-content-between mb-3 pb-3 border-bottom border-warning">
+        <div class="d-flex align-items-center">
+          <img src="https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl" class="logo-sidebar me-2" alt="Logo Al Firdaus">
+          <div>
+            <span class="fs-6 fw-bold text-gold d-block" style="line-height: 1.1;">SIMHAQ</span>
+            <small style="font-size: 0.65rem; color: #e0e0e0;">SIT & Ponpes Al Firdaus</small>
+          </div>
         </div>
+        <button class="btn btn-sm text-white d-lg-none" onclick="toggleSidebar()"><i class="fa-solid fa-xmark fs-5"></i></button>
       </div>
       
       <div class="small text-light bg-dark bg-opacity-50 p-2 rounded mb-3 border border-secondary" id="userInfo">
@@ -227,7 +338,7 @@
     </nav>
 
     <!-- CONTENT AREA -->
-    <main class="col-md-9 col-lg-10 ms-sm-auto px-4 py-3">
+    <main class="main-content">
       
       <!-- TAB 1: DASHBOARD -->
       <div id="tab-dashboard" class="tab-content">
@@ -236,33 +347,67 @@
             <h3 class="fw-bold text-firdaus mb-0">Dashboard Utama</h3>
             <small class="text-muted">Sistem Informasi Manajemen Halaqah Al-Qur'an Al Firdaus</small>
           </div>
-          <span class="badge bg-firdaus p-2 border border-warning" id="currentDateDisplay"></span>
         </div>
         
-        <!-- Stat Cards -->
+        <!-- STAT CARDS DENGAN IKON -->
         <div class="row g-3 mb-4">
-          <div class="col-md-3">
-            <div class="card card-stat shadow-sm p-3 bg-white">
-              <div class="text-muted small font-weight-bold">Total Santri</div>
-              <div class="fs-3 fw-bold text-firdaus" id="statSantri">0</div>
+          <!-- Total Santri -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white h-100">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <div class="text-muted small font-weight-bold">Total Santri</div>
+                  <div class="fs-3 fw-bold text-firdaus" id="statSantri">0</div>
+                </div>
+                <div class="stat-icon-wrapper bg-light text-firdaus border border-warning">
+                  <i class="fa-solid fa-user-graduate fa-xl"></i>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="card card-stat shadow-sm p-3 bg-white">
-              <div class="text-muted small font-weight-bold">Ustadz / Muhaffiz</div>
-              <div class="fs-3 fw-bold text-firdaus" id="statGuru">0</div>
+
+          <!-- Ustadz / Muhaffiz -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white h-100">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <div class="text-muted small font-weight-bold">Ustadz / Muhaffiz</div>
+                  <div class="fs-3 fw-bold text-firdaus" id="statGuru">0</div>
+                </div>
+                <div class="stat-icon-wrapper bg-light text-firdaus border border-warning">
+                  <i class="fa-solid fa-chalkboard-user fa-xl"></i>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="card card-stat shadow-sm p-3 bg-white">
-              <div class="text-muted small font-weight-bold">Hadir Hari Ini</div>
-              <div class="fs-3 fw-bold text-success" id="statHadir">0</div>
+
+          <!-- Hadir Hari Ini -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white h-100">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <div class="text-muted small font-weight-bold">Hadir Hari Ini</div>
+                  <div class="fs-3 fw-bold text-success" id="statHadir">0</div>
+                </div>
+                <div class="stat-icon-wrapper bg-light text-success border border-success">
+                  <i class="fa-solid fa-user-check fa-xl"></i>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="card card-stat shadow-sm p-3 bg-white">
-              <div class="text-muted small font-weight-bold">Setoran Hari Ini</div>
-              <div class="fs-3 fw-bold text-primary" id="statSetoran">0</div>
+
+          <!-- Setoran Hari Ini -->
+          <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card card-stat shadow-sm p-3 bg-white h-100">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <div class="text-muted small font-weight-bold">Setoran Hari Ini</div>
+                  <div class="fs-3 fw-bold text-primary" id="statSetoran">0</div>
+                </div>
+                <div class="stat-icon-wrapper bg-light text-primary border border-primary">
+                  <i class="fa-solid fa-book-quran fa-xl"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -299,7 +444,7 @@
 
       <!-- TAB 2: PRESENSI HALAQAH -->
       <div id="tab-presensi" class="tab-content d-none">
-        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom gap-2">
           <h3 class="fw-bold text-firdaus mb-0">Presensi Halaqah</h3>
           <ul class="nav nav-pills sub-nav">
             <li class="nav-item">
@@ -313,13 +458,13 @@
 
         <!-- SUB 1: ISI PRESENSI -->
         <div id="sub-isi-presensi">
-          <div class="card shadow-sm p-4 mb-4 border-0">
+          <div class="card shadow-sm p-3 p-md-4 mb-4 border-0">
             <div class="row g-3">
-              <div class="col-md-4">
+              <div class="col-12 col-md-4">
                 <label class="form-label fw-bold text-firdaus">Pilih Halaqah</label>
                 <select id="presensiHalaqah" class="form-select" onchange="loadSantriPresensi()"></select>
               </div>
-              <div class="col-md-3">
+              <div class="col-12 col-sm-6 col-md-3">
                 <label class="form-label fw-bold text-firdaus">Sesi Halaqah</label>
                 <select id="presensiSesi" class="form-select">
                   <option value="Subuh">Bakda Subuh</option>
@@ -327,27 +472,29 @@
                   <option value="Maghrib">Bakda Maghrib</option>
                 </select>
               </div>
-              <div class="col-md-3">
+              <div class="col-12 col-sm-6 col-md-3">
                 <label class="form-label fw-bold text-firdaus">Jam Halaqah</label>
                 <input type="time" id="presensiJam" class="form-control" required>
               </div>
-              <div class="col-md-2 d-flex align-items-end">
+              <div class="col-12 col-md-2 d-flex align-items-end">
                 <button class="btn btn-gold w-100" onclick="markAllHadir()"><i class="fa-solid fa-check-double me-1"></i> Hadir Semua</button>
               </div>
             </div>
           </div>
           <div class="card shadow-sm p-3 border-0">
-            <table class="table table-hover align-middle">
-              <thead>
-                <tr class="table-firdaus-head">
-                  <th>Nama Santri</th>
-                  <th>Status Kehadiran</th>
-                </tr>
-              </thead>
-              <tbody id="presensiTableBody">
-                <tr><td colspan="2" class="text-center text-muted">Pilih halaqah di atas untuk memuat daftar santri.</td></tr>
-              </tbody>
-            </table>
+            <div class="table-responsive">
+              <table class="table table-hover align-middle">
+                <thead>
+                  <tr class="table-firdaus-head">
+                    <th>Nama Santri</th>
+                    <th>Status Kehadiran</th>
+                  </tr>
+                </thead>
+                <tbody id="presensiTableBody">
+                  <tr><td colspan="2" class="text-center text-muted">Pilih halaqah di atas untuk memuat daftar santri.</td></tr>
+                </tbody>
+              </table>
+            </div>
             <button class="btn btn-firdaus w-100 mt-2 py-2" onclick="simpanPresensi()"><i class="fa-solid fa-floppy-disk me-2 text-gold"></i> Simpan Presensi Halaqah</button>
           </div>
         </div>
@@ -355,10 +502,10 @@
         <!-- SUB 2: REKAPAN PRESENSI -->
         <div id="sub-rekap-presensi" class="d-none">
           <div class="card shadow-sm p-3 border-0">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
               <h5 class="fw-bold text-firdaus mb-0"><i class="fa-solid fa-table me-2 text-gold"></i> Rekapitulasi Presensi Santri</h5>
               <div>
-                <button class="btn btn-sm btn-outline-success me-2" onclick="exportToExcel('rekapPresensiTable', 'Rekap_Presensi_SIMHAQ')"><i class="fa-solid fa-file-excel me-1"></i> Excel</button>
+                <button class="btn btn-sm btn-outline-success me-1 me-sm-2" onclick="exportToExcel('rekapPresensiTable', 'Rekap_Presensi_SIMHAQ')"><i class="fa-solid fa-file-excel me-1"></i> Excel</button>
                 <button class="btn btn-sm btn-outline-danger" onclick="exportToPDF('rekapPresensiTable', 'Rekap Presensi Halaqah SIMHAQ Al Firdaus')"><i class="fa-solid fa-file-pdf me-1"></i> PDF</button>
               </div>
             </div>
@@ -386,7 +533,7 @@
 
       <!-- TAB 3: INPUT SETORAN -->
       <div id="tab-setoran" class="tab-content d-none">
-        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom gap-2">
           <h3 class="fw-bold text-firdaus mb-0">Setoran Hafalan</h3>
           <ul class="nav nav-pills sub-nav">
             <li class="nav-item">
@@ -400,21 +547,21 @@
 
         <!-- SUB 1: FORM SETORAN -->
         <div id="sub-form-setoran">
-          <div class="card shadow-sm p-4 border-0">
+          <div class="card shadow-sm p-3 p-md-4 border-0">
             <form id="formSetoran" onsubmit="handleSaveSetoran(event)">
               <div class="row g-3 mb-3">
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                   <label class="form-label fw-bold text-firdaus">Pilih Santri</label>
                   <select id="setoranSantri" class="form-select" required></select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-md-4">
                   <label class="form-label fw-bold text-firdaus">Jenis Setoran</label>
                   <select id="setoranJenis" class="form-select" required>
                     <option value="Ziyadah">Ziyadah (Hafalan Baru)</option>
                     <option value="Murojaah">Murojaah (Pengulangan)</option>
                   </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-md-4">
                   <label class="form-label fw-bold text-firdaus">Sesi Halaqah</label>
                   <select id="setoranSesi" class="form-select">
                     <option value="Subuh">Bakda Subuh</option>
@@ -425,18 +572,18 @@
               </div>
 
               <div class="row g-3 mb-3">
-                <div class="col-md-4">
+                <div class="col-12 col-md-4">
                   <label class="form-label fw-bold text-firdaus">Nama Surah</label>
                   <input type="text" id="setoranSurah" class="form-control" placeholder="Contoh: Al-Baqarah" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-md-4">
                   <label class="form-label fw-bold text-firdaus">Ayat (Awal - Akhir)</label>
                   <div class="input-group">
                     <input type="number" id="setoranAyatAwal" class="form-control" placeholder="Awal" required>
                     <input type="number" id="setoranAyatAkhir" class="form-control" placeholder="Akhir" required>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-6 col-md-4">
                   <label class="form-label fw-bold text-firdaus">Jumlah Halaman / Juz</label>
                   <input type="text" id="setoranHalaman" class="form-control" placeholder="Contoh: 1/2 Halaman">
                 </div>
@@ -444,15 +591,15 @@
 
               <h5 class="fw-bold text-firdaus mt-4 pb-2 border-bottom"><i class="fa-solid fa-star text-gold me-2"></i> Rubrik Penilaian Al Firdaus</h5>
               <div class="row g-3 mb-3">
-                <div class="col-md-4">
+                <div class="col-12 col-sm-4">
                   <label class="form-label font-weight-bold">Kelancaran (40%)</label>
                   <input type="number" id="scoreKelancaran" class="form-control" min="0" max="100" value="85" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-4">
                   <label class="form-label font-weight-bold">Tajwid & Mad (30%)</label>
                   <input type="number" id="scoreTajwid" class="form-control" min="0" max="100" value="85" required>
                 </div>
-                <div class="col-md-4">
+                <div class="col-12 col-sm-4">
                   <label class="form-label font-weight-bold">Makharijul Huruf (20%)</label>
                   <input type="number" id="scoreMakhraj" class="form-control" min="0" max="100" value="85" required>
                 </div>
@@ -470,16 +617,16 @@
 
         <!-- SUB 2: REKAPAN PER SANTRI -->
         <div id="sub-rekap-setoran" class="d-none">
-          <div class="card shadow-sm p-4 mb-3 border-0">
+          <div class="card shadow-sm p-3 p-md-4 mb-3 border-0">
             <div class="row g-3 align-items-center">
-              <div class="col-md-6">
+              <div class="col-12 col-md-6">
                 <label class="form-label fw-bold text-firdaus">Filter Santri</label>
                 <select id="filterRekapSantri" class="form-select" onchange="loadRekapSetoranPerSantri()">
                   <option value="ALL">-- Semua Santri --</option>
                 </select>
               </div>
-              <div class="col-md-6 text-end pt-4">
-                <button class="btn btn-outline-success me-2" onclick="exportToExcel('rekapSetoranTable', 'Rekap_Setoran_Per_Santri')"><i class="fa-solid fa-file-excel me-1"></i> Excel</button>
+              <div class="col-12 col-md-6 text-md-end pt-md-4">
+                <button class="btn btn-outline-success me-1 me-sm-2" onclick="exportToExcel('rekapSetoranTable', 'Rekap_Setoran_Per_Santri')"><i class="fa-solid fa-file-excel me-1"></i> Excel</button>
                 <button class="btn btn-outline-danger" onclick="exportToPDF('rekapSetoranTable', 'Rekap Setoran Hafalan Per Santri SIMHAQ')"><i class="fa-solid fa-file-pdf me-1"></i> PDF</button>
               </div>
             </div>
@@ -556,6 +703,23 @@
     user: null,
     master: { santri: [], guru: [], halaqah: [] }
   };
+
+  // TOGGLE HAMBURGER SIDEBAR (RESPONSIVE FOR ALL DEVICES)
+  function toggleSidebar() {
+    const sidebar = document.getElementById('mainSidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    
+    if (window.innerWidth < 992) {
+      sidebar.classList.toggle('mobile-open');
+      if (sidebar.classList.contains('mobile-open')) {
+        backdrop.classList.remove('d-none');
+      } else {
+        backdrop.classList.add('d-none');
+      }
+    } else {
+      sidebar.classList.toggle('collapsed');
+    }
+  }
 
   // UNIVERSAL BACKEND RUNNER (Support Google Apps Script & GitHub Pages)
   function callBackend(fnName, argsArray, onSuccess, onFailure) {
@@ -715,6 +879,14 @@
     
     document.getElementById(`tab-${tabName}`).classList.remove('d-none');
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
+
+    // Auto close sidebar on mobile after selecting tab
+    if (window.innerWidth < 992) {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      sidebar.classList.remove('mobile-open');
+      if (backdrop) backdrop.classList.add('d-none');
+    }
 
     if (tabName === 'dashboard') loadDashboardData();
     if (tabName === 'laporan') loadLaporanUmum();
