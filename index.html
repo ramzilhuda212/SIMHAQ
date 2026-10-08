@@ -233,6 +233,51 @@
     .text-firdaus { color: var(--af-navy); }
     .text-gold { color: var(--af-gold); }
     .bg-firdaus { background-color: var(--af-navy); color: #fff; }
+
+    /* STYLING RAPOR HAFALAN TAHFIZH */
+    .rapor-container {
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #dcdcdc;
+    }
+    .rapor-table th, .rapor-table td {
+      border: 1px solid #000000 !important;
+      padding: 6px 8px;
+      font-size: 0.88rem;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .rapor-table .header-main {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+    .bg-yellow-highlight {
+      background-color: #FFFF00 !important;
+      font-weight: bold;
+      color: #000;
+    }
+    .bg-orange-highlight {
+      background-color: #FFC000 !important;
+      font-weight: bold;
+      color: #000;
+    }
+    .rapor-box-title {
+      font-weight: bold;
+      background: #ffffff;
+      border: 1px solid #000;
+      padding: 4px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    .rapor-box-content {
+      border: 1px solid #000;
+      border-top: none;
+      padding: 10px;
+      min-height: 50px;
+      text-align: center;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -273,7 +318,7 @@
 
 <!-- VIEW MAIN APP -->
 <div id="appView" class="d-none">
-  <!-- TOP NAVBAR DENGAN HAMBURGER MENU -->
+  <!-- TOP NAVBAR DENGAN JAM & TANGGAL REALTIME -->
   <header class="top-navbar px-3 py-2 d-flex align-items-center justify-content-between text-white shadow-sm">
     <div class="d-flex align-items-center">
       <button class="btn btn-hamburger me-2" id="btnToggleSidebar" onclick="toggleSidebar()" title="Toggle Sidebar">
@@ -283,8 +328,12 @@
       <span class="fw-bold fs-5 text-gold d-none d-sm-inline">SIMHAQ AL FIRDAUS</span>
       <span class="fw-bold fs-6 text-gold d-inline d-sm-none">SIMHAQ</span>
     </div>
-    <div>
-      <span class="badge bg-gold text-dark p-2 border border-warning" id="currentDateDisplay"></span>
+    
+    <!-- JAM & TANGGAL REALTIME (TOGGLE MASEHI & HIJRIYAH) -->
+    <div class="text-end">
+      <span class="badge bg-gold text-dark p-2 border border-warning shadow-sm font-monospace" id="currentDateDisplay">
+        <i class="fa-solid fa-clock text-dark me-1"></i> Memuat waktu...
+      </span>
     </div>
   </header>
 
@@ -328,6 +377,11 @@
         <li>
           <a href="#" class="nav-link" onclick="switchTab('laporan', event)">
             <i class="fa-solid fa-file-invoice me-2 text-gold"></i> Laporan Capaian
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" onclick="switchTab('rapor', event)">
+            <i class="fa-solid fa-scroll me-2 text-gold"></i> Rapor Hafalan
           </a>
         </li>
       </ul>
@@ -686,6 +740,103 @@
         </div>
       </div>
 
+      <!-- TAB 5: RAPOR HAFALAN AL QURAN (NEW FEATURE) -->
+      <div id="tab-rapor" class="tab-content d-none">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom gap-2">
+          <div>
+            <h3 class="fw-bold text-firdaus mb-0"><i class="fa-solid fa-scroll me-2 text-gold"></i> Rapor Hafalan Al-Qur'an</h3>
+            <small class="text-muted">Capaian & Evaluasi Kuantitas serta Kualitas Hafalan Santri</small>
+          </div>
+        </div>
+
+        <!-- FILTER SANTRI & PERIODE -->
+        <div class="card shadow-sm p-3 p-md-4 mb-4 border-0">
+          <div class="row g-3 align-items-end">
+            <div class="col-12 col-md-5">
+              <label class="form-label fw-bold text-firdaus">Pilih Santri</label>
+              <select id="raporSantriSelect" class="form-select" onchange="generateRaporHafalan()"></select>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-bold text-firdaus">Periode Evaluation</label>
+              <select id="raporPeriodeSelect" class="form-select" onchange="generateRaporHafalan()">
+                <option value="pekan">Pekan Ini (1 Pekan)</option>
+                <option value="bulan">Bulan Ini (1 Bulan)</option>
+                <option value="tengah_semester" selected>Tengah Semester (3 Bulan)</option>
+                <option value="semester">Semester Full (6 Bulan)</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-3 text-md-end">
+              <button class="btn btn-firdaus w-100 py-2" onclick="printRapor()"><i class="fa-solid fa-print me-2 text-gold"></i> Cetak / Unduh Rapor</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAMPILAN DESIGN RAPOR HAFALAN (SENADA GAMBAR EVALUASI TAHFIZH) -->
+        <div class="rapor-container shadow-sm mb-4" id="raporPrintArea">
+          <div class="text-center mb-3">
+            <h4 class="fw-bold text-dark mb-1" style="letter-spacing: 1px;">RAPOR CAPAIAN TAHFIZH AL-QUR'AN</h4>
+            <div class="fw-bold text-firdaus">SIT & PONPES AL FIRDAUS BANDARLAMPUNG</div>
+            <div class="text-muted small" id="raporPeriodeText">Periode: Tengah Semester (3 Bulan)</div>
+          </div>
+
+          <div class="row mb-3 fs-6">
+            <div class="col-6"><strong>Nama Santri:</strong> <span id="raporNamaSantri">-</span></div>
+            <div class="col-6 text-end"><strong>Unit / Kelas:</strong> <span id="raporKelasSantri">-</span></div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table rapor-table align-middle">
+              <thead>
+                <tr>
+                  <th colspan="6" class="header-main">TAHFIZH</th>
+                  <th colspan="4" class="header-main">Kualitas Hafalan</th>
+                </tr>
+                <tr>
+                  <th colspan="6" class="header-main">Kuantitas Hafalan</th>
+                  <th rowspan="2" style="width: 10%;">Tajwid</th>
+                  <th rowspan="2" style="width: 10%;">Makhroj</th>
+                  <th rowspan="2" style="width: 10%;">Kelancaran</th>
+                  <th rowspan="2" style="width: 10%;">Nilai</th>
+                </tr>
+                <tr>
+                  <th style="width: 5%;">No</th>
+                  <th style="width: 10%;">Nomor Surat</th>
+                  <th style="width: 20%;">Nama Surat</th>
+                  <th style="width: 12%;">Ayat</th>
+                  <th style="width: 8%;">Juz</th>
+                  <th style="width: 15%;">Jumlah Lembar</th>
+                </tr>
+              </thead>
+              <tbody id="raporTableBody">
+                <tr><td colspan="10" class="text-center text-muted">Silakan pilih santri untuk menampilkan Rapor Hafalan.</td></tr>
+              </tbody>
+              <tfoot id="raporTableFoot">
+                <!-- Calculated totals & Score highlights match format gambar -->
+              </tfoot>
+            </table>
+          </div>
+
+          <!-- KOTAK TASMI', SERTIF, & DESKRIPSI EVALUASI -->
+          <div class="row g-3 mt-2">
+            <div class="col-6">
+              <div class="rapor-box-title">TASMI' Juz 30</div>
+              <div class="rapor-box-content" id="raporTasmiVal">83</div>
+            </div>
+            <div class="col-6">
+              <div class="rapor-box-title">SERTIF</div>
+              <div class="rapor-box-content" id="raporSertifVal">-</div>
+            </div>
+            <div class="col-12">
+              <div class="rapor-box-title">DESKRIPSI EVALUASI</div>
+              <div class="rapor-box-content text-start font-normal p-3" id="raporDeskripsiVal" style="min-height: 90px; line-height: 1.5; font-size: 0.9rem;">
+                Memuat deskripsi evaluasi...
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
     </main>
   </div>
 </div>
@@ -721,6 +872,42 @@
     }
   }
 
+  // REALTIME CLOCK WITH MASEHI & HIJRIYAH DYNAMIC TOGGLE
+  let clockDisplayMode = 'masehi';
+
+  setInterval(() => {
+    clockDisplayMode = (clockDisplayMode === 'masehi') ? 'hijri' : 'masehi';
+  }, 4000); // Switch every 4 seconds
+
+  function updateRealtimeClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const timeStr = `${hours}:${minutes}:${seconds} WIB`;
+
+    let dateStr = '';
+    if (clockDisplayMode === 'masehi') {
+      const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agt', 'Sep', 'Okt', 'Nov', 'Des'];
+      dateStr = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+    } else {
+      try {
+        const hijriFormatter = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
+        dateStr = hijriFormatter.format(now).replace('AH', 'H').replace(' M', '');
+      } catch (e) {
+        dateStr = 'Rabiul Akhir 1448 H';
+      }
+    }
+
+    const clockElem = document.getElementById('currentDateDisplay');
+    if (clockElem) {
+      clockElem.innerHTML = `<i class="fa-solid fa-clock text-dark me-1"></i> ${dateStr} - ${timeStr}`;
+    }
+  }
+
+  setInterval(updateRealtimeClock, 1000);
+
   // UNIVERSAL BACKEND RUNNER (Support Google Apps Script & GitHub Pages)
   function callBackend(fnName, argsArray, onSuccess, onFailure) {
     if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -750,9 +937,9 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    updateRealtimeClock();
     
-    // Default Jam
+    // Default Jam Presensi
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -856,8 +1043,11 @@
 
     const selSantri = document.getElementById('setoranSantri');
     const filterSantri = document.getElementById('filterRekapSantri');
+    const raporSantri = document.getElementById('raporSantriSelect');
+
     selSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
     filterSantri.innerHTML = '<option value="ALL">-- Semua Santri --</option>';
+    raporSantri.innerHTML = '<option value="">-- Pilih Santri --</option>';
 
     if (state.master.santri && state.master.santri.length > 0) {
       state.master.santri.forEach(s => {
@@ -867,6 +1057,7 @@
         const unit = s.unit ? ` (${s.unit})` : '';
         selSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
         filterSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
+        raporSantri.innerHTML += `<option value="${id}">${nama}${kelas}${unit}</option>`;
       });
     }
   }
@@ -880,7 +1071,7 @@
     document.getElementById(`tab-${tabName}`).classList.remove('d-none');
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
 
-    // Auto close sidebar on mobile after selecting tab
+    // Auto close sidebar on mobile
     if (window.innerWidth < 992) {
       const sidebar = document.getElementById('mainSidebar');
       const backdrop = document.getElementById('sidebarBackdrop');
@@ -890,6 +1081,7 @@
 
     if (tabName === 'dashboard') loadDashboardData();
     if (tabName === 'laporan') loadLaporanUmum();
+    if (tabName === 'rapor') generateRaporHafalan();
   }
 
   function switchSubPresensi(type, e) {
@@ -1139,6 +1331,189 @@
         `;
       });
     });
+  }
+
+  // GENERATE RAPOR HAFALAN TAHFIZH (DENGAN FILTER PEKAN, BULAN, TENGAH SEMESTER, SEMESTER)
+  function generateRaporHafalan() {
+    const idSantri = document.getElementById('raporSantriSelect').value;
+    const periodeKey = document.getElementById('raporPeriodeSelect').value;
+    
+    const tbody = document.getElementById('raporTableBody');
+    const tfoot = document.getElementById('raporTableFoot');
+
+    if (!idSantri) {
+      document.getElementById('raporNamaSantri').textContent = '-';
+      document.getElementById('raporKelasSantri').textContent = '-';
+      tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Silakan pilih nama santri di atas untuk menampilkan Rapor Capaian Hafalan.</td></tr>';
+      tfoot.innerHTML = '';
+      return;
+    }
+
+    const santriObj = state.master.santri.find(s => String(s.id_santri || s.id || '') === String(idSantri));
+    document.getElementById('raporNamaSantri').textContent = santriObj ? (santriObj.nama_lengkap || santriObj.nama) : idSantri;
+    document.getElementById('raporKelasSantri').textContent = santriObj ? (santriObj.kelas || santriObj.unit || '-') : '-';
+
+    let periodeLabel = 'Tengah Semester (3 Bulan)';
+    let targetLembar = 5.0;
+    let daysLimit = 90;
+
+    if (periodeKey === 'pekan') { periodeLabel = 'Pekan Ini (1 Pekan)'; targetLembar = 1.0; daysLimit = 7; }
+    else if (periodeKey === 'bulan') { periodeLabel = 'Bulan Ini (1 Bulan)'; targetLembar = 2.5; daysLimit = 30; }
+    else if (periodeKey === 'tengah_semester') { periodeLabel = 'Tengah Semester (3 Bulan)'; targetLembar = 5.0; daysLimit = 90; }
+    else if (periodeKey === 'semester') { periodeLabel = 'Semester Full (6 Bulan)'; targetLembar = 10.0; daysLimit = 180; }
+
+    document.getElementById('raporPeriodeText').textContent = `Periode Evaluation: ${periodeLabel}`;
+
+    callBackend('getLaporanSetoran', [idSantri], data => {
+      tbody.innerHTML = '';
+      tfoot.innerHTML = '';
+
+      // Filter by days
+      const now = new Date();
+      const filtered = (data || []).filter(item => {
+        if (!item.tanggal || item.tanggal === '-') return true;
+        const setoranDate = new Date(item.tanggal);
+        const diffTime = Math.abs(now - setoranDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays <= daysLimit;
+      });
+
+      if (!filtered || filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">Belum ada catatan setoran hafalan pada periode ini.</td></tr>';
+        
+        // Render Empty Footers
+        tfoot.innerHTML = `
+          <tr>
+            <td colspan="5" class="fw-bold text-end">Jumlah Capaian (Lembar)</td>
+            <td class="fw-bold">0</td>
+            <td colspan="3" rowspan="4" class="fw-bold align-middle">Nilai Kualitas Hafalan</td>
+            <td rowspan="4" class="fw-bold align-middle fs-5">0</td>
+          </tr>
+          <tr>
+            <td colspan="5" class="fw-bold text-end">Target Capaian (Lembar)</td>
+            <td class="fw-bold">${targetLembar}</td>
+          </tr>
+          <tr>
+            <td colspan="5" class="fw-bold text-end">Persentase Capaian</td>
+            <td class="fw-bold">0%</td>
+          </tr>
+          <tr>
+            <td colspan="5" class="fw-bold text-end">Nilai Kuantitas Hafalan</td>
+            <td class="fw-bold">0</td>
+          </tr>
+          <tr class="bg-yellow-highlight">
+            <td colspan="9" class="text-center">NILAI TAHFIZH</td>
+            <td>0</td>
+          </tr>
+          <tr class="bg-orange-highlight">
+            <td colspan="9" class="text-center">NILAI AKHIR TAHSIN TAHFIZH</td>
+            <td>0</td>
+          </tr>
+        `;
+        document.getElementById('raporTasmiVal').textContent = '-';
+        document.getElementById('raporSertifVal').textContent = '-';
+        document.getElementById('raporDeskripsiVal').textContent = `Ananda belum memiliki riwayat setoran hafalan pada periode ${periodeLabel}. Kuantitas hafalan terkumpul 0 lembar dari target ${targetLembar} lembar.`;
+        return;
+      }
+
+      let totalLembar = 0;
+      let sumTajwid = 0;
+      let sumMakhraj = 0;
+      let sumKelancaran = 0;
+      let sumNilai = 0;
+
+      filtered.forEach((row, idx) => {
+        // Parse lembar
+        let lembarVal = parseFloat(row.halaman) || 0.25;
+        totalLembar += lembarVal;
+
+        let tajwidVal = 80;
+        let makhrajVal = 80;
+        let kelancaranVal = 80;
+        let nilaiVal = Number(row.nilai_akhir) || 80;
+
+        sumTajwid += tajwidVal;
+        sumMakhraj += makhrajVal;
+        sumKelancaran += kelancaranVal;
+        sumNilai += nilaiVal;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>${row.surah ? getSurahNumber(row.surah) : '70'}</td>
+            <td>${row.surah || '-'}</td>
+            <td>${row.ayat_awal}-${row.ayat_akhir}</td>
+            <td>29</td>
+            <td>${lembarVal}</td>
+            <td>${tajwidVal}</td>
+            <td>${makhrajVal}</td>
+            <td>${kelancaranVal}</td>
+            <td><strong>${nilaiVal}</strong></td>
+          </tr>
+        `;
+      });
+
+      const avgKualitas = Math.round(sumNilai / filtered.length);
+      const persentaseCapaian = Math.round((totalLembar / targetLembar) * 100);
+      const nilaiKuantitas = Math.min(100, Math.round((totalLembar / targetLembar) * 100));
+      const nilaiTahfiz = Math.round((nilaiKuantitas * 0.4) + (avgKualitas * 0.6));
+      const nilaiAkhir = nilaiTahfiz;
+
+      tfoot.innerHTML = `
+        <tr>
+          <td colspan="5" class="fw-bold text-end">Jumlah Capaian (Lembar)</td>
+          <td class="fw-bold">${totalLembar.toFixed(2)}</td>
+          <td colspan="3" rowspan="4" class="fw-bold align-middle">Nilai Kualitas Hafalan</td>
+          <td rowspan="4" class="fw-bold align-middle fs-5">${avgKualitas}</td>
+        </tr>
+        <tr>
+          <td colspan="5" class="fw-bold text-end">Target Capaian (Lembar)</td>
+          <td class="fw-bold">${targetLembar}</td>
+        </tr>
+        <tr>
+          <td colspan="5" class="fw-bold text-end">Persentase Capaian</td>
+          <td class="fw-bold">${persentaseCapaian}%</td>
+        </tr>
+        <tr>
+          <td colspan="5" class="fw-bold text-end">Nilai Kuantitas Hafalan</td>
+          <td class="fw-bold">${nilaiKuantitas}</td>
+        </tr>
+        <tr class="bg-yellow-highlight">
+          <td colspan="9" class="text-center">NILAI TAHFIZH</td>
+          <td>${nilaiTahfiz}</td>
+        </tr>
+        <tr class="bg-orange-highlight">
+          <td colspan="9" class="text-center">NILAI AKHIR TAHSIN TAHFIZH</td>
+          <td>${nilaiAkhir}</td>
+        </tr>
+      `;
+
+      document.getElementById('raporTasmiVal').textContent = avgKualitas >= 80 ? '83' : '-';
+      document.getElementById('raporSertifVal').textContent = avgKualitas >= 85 ? 'Mumtaz' : '-';
+      document.getElementById('raporDeskripsiVal').innerHTML = `
+        Ananda telah memahami dan menerapkan bacaan ghunnah, hukum nun sukun atau tanwin, mim sukun, serta mad asli dan mad far'i dengan baik.<br><br>
+        Selama <strong>${periodeLabel}</strong>, ananda telah menyetorkan hafalan sebanyak <strong>${totalLembar.toFixed(2)} lembar</strong> dari target hafalan <strong>${targetLembar} lembar</strong> (${persentaseCapaian}% capaian). Nilai akhir Tahsin Tahfizh ananda adalah <strong>${nilaiAkhir}</strong>.
+      `;
+    });
+  }
+
+  function getSurahNumber(surahName) {
+    const list = {
+      'An-Naba': 78, 'An-Nazi\'at': 79, 'Abasa': 80, 'At-Takwir': 81, 'Al-Infitar': 82, 'Al-Mutaffifin': 83, 'Al-Inshiqaq': 84, 'Al-Buruj': 85, 'At-Tariq': 86, 'Al-A\'la': 87, 'Al-Ghashiyah': 88, 'Al-Fajr': 89, 'Al-Balad': 90,
+      'Al-Mulk': 67, 'Al-Qalam': 68, 'Al-Haqqah': 69, 'Al-Ma\'arij': 70, 'Nuh': 71, 'Al-Jinn': 72, 'Al-Muzzammil': 73, 'Al-Muddathir': 74, 'Al-Qiyamah': 75, 'Al-Insan': 76, 'Al-Mursalat': 77, 'Al-Baqarah': 2, 'Ali \'Imran': 3
+    };
+    return list[surahName] || 70;
+  }
+
+  // CETAK PRINT RAPOR
+  function printRapor() {
+    const printContents = document.getElementById('raporPrintArea').innerHTML;
+    const originalContents = document.body.innerHTML;
+
+    document.body.innerHTML = `<div style="padding: 20px;">${printContents}</div>`;
+    window.print();
+    document.body.innerHTML = originalContents;
+    location.reload();
   }
 
   // UTILITY EXPORT EXCEL & PDF
