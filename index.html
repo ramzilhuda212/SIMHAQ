@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SIMHAQ - SIT & Ponpes Al Firdaus</title>
-  <!-- Favicon Logo Al Firdaus -->
-  <link rel="icon" type="image/png" href="assets/logo-alfirdaus.png">
+  
+  <!-- 1. FAVICON LOGO AL FIRDAUS -->
+  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl">
+  
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- FontAwesome Icons -->
@@ -17,14 +19,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
   
+  <!-- 2. WARNA DESAIN TEMA SENADA LOGO AL FIRDAUS -->
   <style>
     :root {
-      --af-navy: #102247;
+      --af-navy: #0F2042;
       --af-navy-dark: #0B1B3D;
       --af-navy-light: #1A365D;
       --af-gold: #F5B11D;
-      --af-gold-hover: #C59B27;
-      --af-gold-light: #FDF8E7;
+      --af-gold-hover: #D4AF37;
+      --af-gold-light: #FFF8E7;
       --af-orange: #E65100;
       --af-green: #0F8243;
       --af-bg: #F4F6F9;
@@ -70,34 +73,30 @@
       transform: translateY(-2px);
     }
     
-    /* LOGIN CONTAINER & LOGO */
+    /* LOGIN CONTAINER & FRAME LOGO */
     .login-container { 
       max-width: 440px; 
-      margin-top: 60px; 
+      margin-top: 50px; 
     }
     .logo-frame-login {
-      width: 110px;
-      height: 110px;
+      width: 140px;
+      height: 140px;
       margin: 0 auto 15px auto;
-      border-radius: 50%;
-      background: #ffffff;
-      padding: 6px;
-      border: 3px solid var(--af-gold);
-      box-shadow: 0 6px 15px rgba(15, 32, 66, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .logo-frame-login img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(15, 32, 66, 0.25));
     }
     .logo-sidebar {
       width: 45px;
       height: 45px;
       object-fit: contain;
-      border-radius: 50%;
-      background: #fff;
-      padding: 2px;
-      border: 2px solid var(--af-gold);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
 
     /* CUSTOM BUTTONS */
@@ -153,7 +152,7 @@
   <div class="card shadow-lg border-0 rounded-4">
     <div class="card-body p-4 text-center">
       <div class="logo-frame-login">
-        <img id="imgLogoLogin" src="assets/logo-alfirdaus.png" alt="Logo Al Firdaus" onerror="this.src=AL_FIRDAUS_FALLBACK_LOGO">
+        <img id="imgLogoLogin" src="https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl" alt="Logo Al Firdaus" onerror="this.src='https://drive.google.com/uc?export=view&id=1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl'">
       </div>
       <h4 class="fw-bold text-firdaus mb-0">SIMHAQ AL FIRDAUS</h4>
       <p class="text-muted small">SIT & Ponpes Al Firdaus Bandarlampung</p>
@@ -188,7 +187,7 @@
     <!-- SIDEBAR -->
     <nav class="col-md-3 col-lg-2 sidebar p-3 d-flex flex-column">
       <div class="d-flex align-items-center mb-3 pb-3 border-bottom border-warning">
-        <img id="imgLogoSidebar" src="assets/logo-alfirdaus.png" class="logo-sidebar me-2" alt="Logo Al Firdaus" onerror="this.src=AL_FIRDAUS_FALLBACK_LOGO">
+        <img id="imgLogoSidebar" src="https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl" class="logo-sidebar me-2" alt="Logo Al Firdaus" onerror="this.src='https://drive.google.com/uc?export=view&id=1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl'">
         <div>
           <span class="fs-5 fw-bold text-gold d-block" style="line-height: 1.1;">SIMHAQ</span>
           <small style="font-size: 0.7rem; color: #e0e0e0;">SIT & Ponpes Al Firdaus</small>
@@ -547,12 +546,11 @@
 <script>
   // =========================================================================
   // KONFIGURASI DEPLOYMENT GITHUB PAGES
-  // Masukkan URL Google Apps Script Web App jika di-deploy ke GitHub Pages:
   // =========================================================================
   const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxTq8cldhpkw2SEn9O0CLEQibEsUkqveUunPRd7Q9rZnl5u54TPf73G_TPKBwblxcuLbA/exec"; 
 
-  // FALLBACK LOGO AL FIRDAUS (SVG LOGO BADGE EMBEDDED)
-  const AL_FIRDAUS_FALLBACK_LOGO = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%23102247' stroke='%23F5B11D' stroke-width='4'/><path d='M50 15 L58 35 L80 35 L62 48 L69 70 L50 56 L31 70 L38 48 L20 35 L42 35 Z' fill='%23F5B11D'/></svg>";
+  // FALLBACK DIRECT GOOGLE DRIVE URL LOGO AL FIRDAUS
+  const AL_FIRDAUS_FALLBACK_LOGO = "https://lh3.googleusercontent.com/d/1Zw8z1i2yixH-k6umwcDbOc7Xu6v3HTQl";
 
   let state = {
     user: null,
@@ -623,7 +621,7 @@
             icon: 'error',
             title: 'Gagal Login',
             text: res ? res.message : 'Username atau Password salah!',
-            confirmButtonColor: '#102247'
+            confirmButtonColor: '#0F2042'
           });
         }
       },
@@ -634,7 +632,7 @@
           icon: 'error',
           title: 'Error Server',
           text: err.message || 'Gagal terhubung ke backend server.',
-          confirmButtonColor: '#102247'
+          confirmButtonColor: '#0F2042'
         });
       }
     );
@@ -811,7 +809,7 @@
     const tgl = new Date().toISOString().split('T')[0];
 
     if (!hId) {
-      Swal.fire({ icon: 'warning', title: 'Halaqah Belum Dipilih', text: 'Pilih halaqah terlebih dahulu!', confirmButtonColor: '#102247' });
+      Swal.fire({ icon: 'warning', title: 'Halaqah Belum Dipilih', text: 'Pilih halaqah terlebih dahulu!', confirmButtonColor: '#0F2042' });
       return;
     }
 
@@ -828,7 +826,7 @@
     });
 
     if (records.length === 0) {
-      Swal.fire({ icon: 'warning', title: 'Data Kosong', text: 'Tidak ada santri yang ditampilkan!', confirmButtonColor: '#102247' });
+      Swal.fire({ icon: 'warning', title: 'Data Kosong', text: 'Tidak ada santri yang ditampilkan!', confirmButtonColor: '#0F2042' });
       return;
     }
 
@@ -838,10 +836,10 @@
           Swal.fire({ icon: 'success', title: 'Presensi Tersimpan!', text: res.message, timer: 2000, showConfirmButton: false });
           loadDashboardData();
         } else {
-          Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: res ? res.message : 'Terjadi kesalahan', confirmButtonColor: '#102247' });
+          Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: res ? res.message : 'Terjadi kesalahan', confirmButtonColor: '#0F2042' });
         }
       },
-      err => Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: err.message, confirmButtonColor: '#102247' })
+      err => Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: err.message, confirmButtonColor: '#0F2042' })
     );
   }
 
@@ -873,7 +871,7 @@
     e.preventDefault();
     const idSantri = document.getElementById('setoranSantri').value;
     if (!idSantri) {
-      Swal.fire({ icon: 'warning', title: 'Santri Belum Dipilih', text: 'Silakan pilih santri terlebih dahulu!', confirmButtonColor: '#102247' });
+      Swal.fire({ icon: 'warning', title: 'Santri Belum Dipilih', text: 'Silakan pilih santri terlebih dahulu!', confirmButtonColor: '#0F2042' });
       return;
     }
 
@@ -902,20 +900,20 @@
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2 text-gold"></i> Simpan Setoran Hafalan';
         if (res && res.success) {
-          Swal.fire({ icon: 'success', title: 'Setoran Berhasil Disimpan!', text: res.message, confirmButtonColor: '#102247' });
+          Swal.fire({ icon: 'success', title: 'Setoran Berhasil Disimpan!', text: res.message, confirmButtonColor: '#0F2042' });
           document.getElementById('formSetoran').reset();
           document.getElementById('scoreKelancaran').value = 85;
           document.getElementById('scoreTajwid').value = 85;
           document.getElementById('scoreMakhraj').value = 85;
           loadDashboardData();
         } else {
-          Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: res ? res.message : 'Terjadi kesalahan', confirmButtonColor: '#102247' });
+          Swal.fire({ icon: 'error', title: 'Gagal Menyimpan', text: res ? res.message : 'Terjadi kesalahan', confirmButtonColor: '#0F2042' });
         }
       },
       err => {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2 text-gold"></i> Simpan Setoran Hafalan';
-        Swal.fire({ icon: 'error', title: 'Error Server', text: err.message, confirmButtonColor: '#102247' });
+        Swal.fire({ icon: 'error', title: 'Error Server', text: err.message, confirmButtonColor: '#0F2042' });
       }
     );
   }
@@ -984,7 +982,7 @@
     const doc = new jsPDF('l', 'pt', 'a4');
     
     doc.setFontSize(14);
-    doc.setTextColor(16, 34, 71);
+    doc.setTextColor(15, 32, 66);
     doc.text(title, 40, 30);
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
@@ -994,7 +992,7 @@
       html: '#' + tableId, 
       startY: 60,
       styles: { fontSize: 8 },
-      headStyles: { fillColor: [16, 34, 71], textColor: [245, 177, 29] }
+      headStyles: { fillColor: [15, 32, 66], textColor: [245, 177, 29] }
     });
 
     doc.save(`${title.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
